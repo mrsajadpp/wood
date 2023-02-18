@@ -36,6 +36,11 @@
     <!--{{>footer}}-->
   </div>
   <script src="javascripts/script.js"></script>
+  <script>
+    if ({{ status }}) {
+      alert('{{ err }}')
+    }
+  </script>
 </body>
 
 </html>
