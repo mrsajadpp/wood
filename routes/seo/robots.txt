@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.mp4$
+Disallow: /search?
