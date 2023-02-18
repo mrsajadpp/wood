@@ -8,31 +8,50 @@ var router = express.Router();
 
 router.get('/', (req, res, next) => {
   try {
+    // Search page delivery
     res.render('search', { title: 'Search anything in wood', description: 'World number 1 search engine powered by Trace inc', style: 'search' })
   } catch (err) {
+    // Error handling
     console.error(err)
   }
 })
 
 router.get('/index', (req, res, next) => {
   try {
-    const url = 'https://google.com';
-    // Send HTTP request to URL
-    request(url, (error, response, body) => {
-      if (error) {
-        console.error(`Error crawling ${url}: ${error}`);
-        return;
-      }
-      // Load HTML content into Cheerio
-      const $ = cheerio.load(body);
-      // Extract data from HTML using Cheerio selectors
-      const title = $('title').text();
-      const links = $('a').map((i, el) => $(el).attr('href')).get();
-      // Log results
-      console.log(`Title: ${title}`);
-      console.log(`Links: ${links}`);
-    });
+    res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search' })
   } catch (err) {
+    // Error handling
+    console.error(err)
+  }
+})
+
+router.post('/index', (req, res, next) => {
+  try {
+    if (req.body.url) {
+      const url = req.body.url;
+      // Send HTTP request to URL
+      request(url, (error, response, body) => {
+        if (error) {
+          console.error(`Error crawling ${url}: ${error}`);
+          return;
+        }
+        // Load HTML content into Cheerio
+        const $ = cheerio.load(body);
+        // Extract data from HTML using Cheerio selectors
+        const title = $('title').text();
+        const contents = $('p').text();
+        const imageUrl = $('img').attr('src');
+        const links = $('a').map((i, el) => $(el).attr('href')).get();
+        // Log results
+        console.log(`Title: ${title}`);
+        //console.log(`Links: ${links}`);
+        console.log(`Contents: ${contents}`)
+        console.log(`Image: ${url}${imageUrl}`)
+        res.redirect('/index')
+      });
+    }
+  } catch (err) {
+    // Error handling
     console.error(err)
   }
 })
