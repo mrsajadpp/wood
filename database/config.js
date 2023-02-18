@@ -5,7 +5,7 @@ let state = {
 function connect(done) {
   try {
     let url = 'mongodb://localhost:27017/'
-    let dbname = 'basket';
+    let dbname = 'wood';
     MongoClient.connect(url, (err, data) => {
       if (err) return done(err);
       state.db = data.db(dbname);

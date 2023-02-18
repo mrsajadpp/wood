@@ -44,6 +44,8 @@
     font-size: 17px;
     font-family: 'Poppins', sans-serif;
     color: #888888;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
 }
 
 .search-area form input::-webkit-search-cancel-button{

@@ -1,3 +1,5 @@
+const webData = require('../database/web_data')
+const userData = require('../database/user_data')
 var express = require('express');
 let path = require('path');
 let fs = require('fs');
@@ -37,17 +39,15 @@ router.post('/index', (req, res, next) => {
         }
         // Load HTML content into Cheerio
         const $ = cheerio.load(body);
-        // Extract data from HTML using Cheerio selectors
-        const title = $('title').text();
-        const contents = $('p').text();
-        const imageUrl = $('img').attr('src');
-        const links = $('a').map((i, el) => $(el).attr('href')).get();
-        // Log results
-        console.log(`Title: ${title}`);
-        //console.log(`Links: ${links}`);
-        console.log(`Contents: ${contents}`)
-        console.log(`Image: ${url}${imageUrl}`)
-        res.redirect('/index')
+        let data = {
+          url: url,
+          title: $('title').text(),
+          description: $('meta[name="description"]').attr('content'),
+          links : $('a').map((i, el) => $(el).attr('href')).get()
+        }
+        webData.addIndex(data).then((response) => {
+          res.redirect('/index')
+        })
       });
     }
   } catch (err) {
