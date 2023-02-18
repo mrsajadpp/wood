@@ -18,6 +18,37 @@ router.get('/', (req, res, next) => {
   }
 })
 
+router.get('/search', (req, res, next) => {
+  try {
+    webData.getIndex().then((indexData) => {
+      const index = elasticlunr(function () {
+        this.addField('title');
+        this.addField('description');
+        this.setRef('url');
+      });
+      indexData.forEach(page => {
+        index.addDoc({
+          url: page.url,
+          title: page.title,
+          description: page.description
+        });
+      });
+      const results = index.search(req.query.q);
+      let resul = [];
+      results.forEach(result => {
+        indexData.forEach(page => {
+          if (page.url == result.ref) {
+            resul.push(page)
+          }
+        })
+      });
+      res.render('result', { title: req.query.q, description: `Found ${results.length} results for '${req.query.q}'`, style: 'result', status: false, pages: resul, q: req.query.q })
+    })
+  } catch (err) {
+    console.error(err)
+  }
+})
+
 router.get('/index', (req, res, next) => {
   try {
     res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: false })
@@ -35,15 +66,16 @@ router.post('/index', (req, res, next) => {
       request(url, (error, response, body) => {
         if (error) {
           console.error(`Error crawling ${url}: ${error}`);
+          res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry facing a error in indexing this page." })
           return;
         }
         // Load HTML content into Cheerio
         const $ = cheerio.load(body);
         let data = {
-          url: url,
-          title: $('title').text(),
-          description: $('meta[name="description"]').attr('content'),
-          links: $('a').map((i, el) => $(el).attr('href')).get()
+          "url": url,
+          "title": $('title').text(),
+          "description": $('meta[name="description"]').attr('content'),
+          "links": $('a').map((i, el) => $(el).attr('href')).get()
         }
         webData.addIndex(data).then((response) => {
           res.redirect('/index')
@@ -51,7 +83,7 @@ router.post('/index', (req, res, next) => {
           res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry this page is already indexed you cant index this page." })
         })
         for (let i = 0; i < data.links.length; i++) {
-          if (data.links[i].startsWith('https')) {
+          if (data.links[i].startsWith('https://') || data.links[i].startsWith('http://')) {
             setTimeout(() => {
               let url = data.links[i]
               request(data.links[i], (error, response, body) => {
@@ -62,12 +94,12 @@ router.post('/index', (req, res, next) => {
                 // Load HTML content into Cheerio
                 const $ = cheerio.load(body);
                 let data = {
-                  url: url,
-                  title: $('title').text(),
-                  description: $('meta[name="description"]').attr('content'),
-                  links: $('a').map((i, el) => $(el).attr('href')).get()
+                  "url": url,
+                  "title": $('title').text(),
+                  "description": $('meta[name="description"]').attr('content'),
+                  "links": $('a').map((i, el) => $(el).attr('href')).get()
                 }
-                webData.addIndex(data).then((response) => {}).catch((err) =>{})
+                webData.addIndex(data).then((response) => { }).catch((err) => { })
               })
             }, 3000);
           }

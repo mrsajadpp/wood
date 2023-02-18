@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="search-box">
+        <div class="banner-area">
+            <img src="/images/banner.png" alt="Wood" class="banner">
+        </div>
+        <div class="search-area">
+            <form action="/search" method="get">
+                <input type="search" name="q" id="q" placeholder="Search" value="{{q}}" required>
+                <button type="submit"><box-icon name='search'></box-icon></button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="optionsbar">
+        <div class="menubutton">
+            <a href="/search?q={{q}}"><box-icon name='search-alt-2' color="#fff"></box-icon>&nbsp;All</a>
+        </div>
+        <div class="menubutton">
+            <a href="/search?q={{q}}&img=true"><box-icon name='image-alt' type='solid' color="#fff" ></box-icon>&nbsp;Images</a>
+        </div>
+        <div class="menubutton">
+            <a href="/search?q={{q}}&videos=true"><box-icon type='solid' name='movie-play' color="#fff"></box-icon>&nbsp;Videos</a>
+        </div>
+    </div>
+</div>
+<div class="container" id="searchresultsarea">
+    {{#each pages}}
+    <div class="searchresult">
+        <h2>{{this.title}}</h2>
+        <a>{{this.url}}</a>
+        <p>{{this.description}}</p>
+        <p> environment where there are many threads of execution.</p>
+    </div>
+    {{/each}}
+</div>
