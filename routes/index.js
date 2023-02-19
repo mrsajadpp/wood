@@ -80,10 +80,12 @@ router.post('/index', (req, res, next) => {
           }
         }*/
       }).catch((err) => {
-        res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry this page is already indexed you cant index this page." })
+        if (err.error == 'Url is not valid!.') {
+          res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry this page is not exist." })
+        } else {
+          res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry this page is already indexed you cant index this page." })
+        }
       })
-    } else {
-      res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry this page is not exist." })
     }
   } catch (err) {
     // Error handling
