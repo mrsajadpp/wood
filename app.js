@@ -1,17 +1,17 @@
 let db = require('./database/config')
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+let createError = require('http-errors');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let logger = require('morgan');
 let handlebars = require('express-handlebars');
 let session = require('express-session');
 let fileUpload = require('express-fileupload');
 let favicon = require("serve-favicon");
 
-var indexRouter = require('./routes/index');
+let indexRouter = require('./routes/index');
 
-var app = express();
+let app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views/pages'));

@@ -1,7 +1,7 @@
-const db = require('./config.js')
-const modules = require('../modules/modules')
-const COLLECTIONS = require('./collections.js');
-const ObjectId = require('mongodb').ObjectID;
+let db = require('./config.js')
+let modules = require('../modules/modules')
+let COLLECTIONS = require('./collections.js');
+let ObjectId = require('mongodb').ObjectID;
 
 module.exports = {
     addIndex: (urlData) => {

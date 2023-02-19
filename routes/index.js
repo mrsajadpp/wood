@@ -1,14 +1,14 @@
-const webData = require('../database/web_data')
-const userData = require('../database/user_data')
-const modules = require('../modules/modules')
-const http = require('url');
-var express = require('express');
+let webData = require('../database/web_data')
+let userData = require('../database/user_data')
+let modules = require('../modules/modules')
+let http = require('url');
+let express = require('express');
 let path = require('path');
 let fs = require('fs');
 let request = require('request');
-const cheerio = require('cheerio');
-const elasticlunr = require('elasticlunr');
-var router = express.Router();
+let cheerio = require('cheerio');
+let elasticlunr = require('elasticlunr');
+let router = express.Router();
 
 router.get('/', (req, res, next) => {
   try {
@@ -28,7 +28,7 @@ router.get('/search', (req, res, next) => {
       modules.addIndex(url.origin, url.pathname).then((stat) = {}).catch((err) => { })
     } else {
       webData.getIndex().then((indexData) => {
-        const index = elasticlunr(function () {
+        let index = elasticlunr(function () {
           this.addField('title');
           this.addField('description');
           this.setRef('url');
@@ -40,7 +40,7 @@ router.get('/search', (req, res, next) => {
             description: page.description
           });
         });
-        const results = index.search(req.query.q);
+        let results = index.search(req.query.q);
         let resul = [];
         results.forEach(result => {
           indexData.forEach(page => {
@@ -69,16 +69,9 @@ router.get('/index', (req, res, next) => {
 router.post('/index', (req, res, next) => {
   try {
     if (req.body.url) {
-      const url = new URL(req.body.url);
+      let url = new URL(req.body.url);
       webData.addIndex(url).then((response) => {
         res.redirect('/index')
-        /*for (let i = 0; i < data.links.length; i++) {
-          if (data.links[i].startsWith('https://') || data.links[i].startsWith('http://')) {
-            modules.addIndex(new URL(data.links[i]).origin, new URL(data.links[i]).pathname)
-          } else {
-            modules.addIndex(origin, data.links[i])
-          }
-        }*/
       }).catch((err) => {
         if (err.error == 'Url is not valid!.') {
           res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry this page is not exist." })

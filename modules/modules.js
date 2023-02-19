@@ -1,7 +1,7 @@
-const http = require('url');
-const webData = require('../database/web_data')
+let http = require('url');
 let request = require('request');
-const cheerio = require('cheerio');
+let webData = require('../database/web_data')
+let cheerio = require('cheerio');
 let path = require('path');
 let fs = require('fs');
 
@@ -13,7 +13,7 @@ module.exports = {
                 request(url.href, (error, response, body) => {
                     if (!error && response.statusCode == 200) {
                         // Load HTML content into Cheerio
-                        const $ = cheerio.load(body);
+                        let $ = cheerio.load(body);
                         let data = {
                             "url": url,
                             "title": $('title').text(),
@@ -35,7 +35,7 @@ module.exports = {
                 request(urlData.href, (error, response, body) => {
                     if (!error && response.statusCode == 200) {
                         // Load HTML content into Cheerio
-                        const $ = cheerio.load(body);
+                        let $ = cheerio.load(body);
                         let data = {
                             "url": urlData.href,
                             "url_data": urlData,
@@ -45,8 +45,18 @@ module.exports = {
                             "html": $.html(),
                             "links": $('a').map((i, el) => $(el).attr('href')).get()
                         }
-                        console.log(data)
                         resolve(data)
+                        data.links.forEach(link => {
+                            if (!link.startsWith('http')) {
+                                if (!link.startsWith('//')) {
+                                    request(urlData.origin + link, (error, response, body) => {
+                                        if (!error && response.statusCode == 200) {
+                                            webData.addIndex(new URL(urlData.origin + link)).then((res) => { }).catch((err) => { })
+                                        }
+                                    })
+                                }
+                            }
+                        })
                     } else {
                         reject({ error: 'Url is not valid!.' })
                     }
