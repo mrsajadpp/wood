@@ -1,7 +1,7 @@
-<div class="container">
+<div class="container top">
     <div class="search-box">
         <div class="banner-area">
-            <img src="/images/banner.png" alt="Wood" class="banner">
+            <img src="/images/favicon.png" alt="Wood" class="banner">
         </div>
         <div class="search-area">
             <form action="/search" method="get">
@@ -11,20 +11,9 @@
         </div>
     </div>
 </div>
-<div class="container">
-    <div class="optionsbar">
-        <div class="menubutton">
-            <a href="/search?q={{q}}"><box-icon name='search-alt-2' color="#fff"></box-icon>&nbsp;All</a>
-        </div>
-        <div class="menubutton">
-            <a href="/search?q={{q}}&img=true"><box-icon name='image-alt' type='solid' color="#fff" ></box-icon>&nbsp;Images</a>
-        </div>
-        <div class="menubutton">
-            <a href="/search?q={{q}}&videos=true"><box-icon type='solid' name='movie-play' color="#fff"></box-icon>&nbsp;Videos</a>
-        </div>
-    </div>
-</div>
+
 <div class="container" id="searchresultsarea">
+    <div class="space"></div>
     {{#each pages}}
     <div class="searchresult">
         <h2>{{this.title}}</h2>

@@ -1,25 +1,37 @@
+.top {
+    position: fixed;
+    top: 0px;
+    background-color: #0f0f0f;
+    box-shadow: #fff 0px 0px 1px;
+}
+
 .search-box {
-    width: 80vw;
+    width: 90vw;
+    height: 100px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.banner-area {
+.space {
     width: 100%;
+    height: 100px;
+}
+
+.banner-area {
+    width: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .banner-area .banner {
-    width: 250px;
+    width: 75px;
 }
 
 .search-area {
     width: 100%;
-    height: 50px;
+    height: 45px;
     background-color: #444444;
     border-radius: 25px;
 }
@@ -65,15 +77,18 @@
 
 .searchresult {
     width: 100vw;
-    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 10px 10px;
     overflow: hidden;
+    box-shadow: #fff 0px 0px 1px;
 }
 
 .searchresult h2 {
     font-size: 19px;
     line-height: 18px;
     font-weight: normal;
-    color: rgb(29, 1, 189);
+    color: #fff;
     margin-bottom: 0px;
     margin-top: 25px;
 }
@@ -82,23 +97,12 @@
     font-size: 14px;
     line-height: 14px;
     color: green;
-    margin-bottom: 0px;
-}
-
-.searchresult button {
-    font-size: 10px;
-    line-height: 14px;
-    color: green;
-    margin-bottom: 0px;
-    padding: 0px;
-    border-width: 0px;
-    background-color: white;
+    margin-top: 10px;
 }
 
 .searchresult p {
     width: 625px;
     font-size: 13px;
-    margin-top: 0px;
     color: rgb(82, 82, 82);
 }
 
@@ -116,6 +120,7 @@
     color: #fff;
     height: 100%;
 }
+
 .menubutton a {
     width: 100%;
     height: 100%;
