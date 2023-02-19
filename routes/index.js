@@ -1,5 +1,7 @@
 const webData = require('../database/web_data')
 const userData = require('../database/user_data')
+const modules = require('../modules/modules')
+const http = require('url');
 var express = require('express');
 let path = require('path');
 let fs = require('fs');
@@ -61,18 +63,21 @@ router.get('/index', (req, res, next) => {
 router.post('/index', (req, res, next) => {
   try {
     if (req.body.url) {
-      const url = req.body.url;
+      const url = new URL(req.body.url);
+      const origin = url.origin;
       // Send HTTP request to URL
-      request(url, (error, response, body) => {
+      request(url.href, (error, response, body) => {
         if (error) {
-          console.error(`Error crawling ${url}: ${error}`);
+          console.error(`Error crawling ${url.href}: ${error}`);
           res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry facing a error in indexing this page." })
           return;
         }
         // Load HTML content into Cheerio
         const $ = cheerio.load(body);
         let data = {
-          "url": url,
+          "url": url.href,
+          "origin": url.origin,
+          "protocol": url.protocol,
           "title": $('title').text(),
           "description": $('meta[name="description"]').attr('content'),
           "links": $('a').map((i, el) => $(el).attr('href')).get()
@@ -84,24 +89,9 @@ router.post('/index', (req, res, next) => {
         })
         for (let i = 0; i < data.links.length; i++) {
           if (data.links[i].startsWith('https://') || data.links[i].startsWith('http://')) {
-            setTimeout(() => {
-              let url = data.links[i]
-              request(data.links[i], (error, response, body) => {
-                if (error) {
-                  console.error(`Error crawling ${url}: ${error}`);
-                  return;
-                }
-                // Load HTML content into Cheerio
-                const $ = cheerio.load(body);
-                let data = {
-                  "url": url,
-                  "title": $('title').text(),
-                  "description": $('meta[name="description"]').attr('content'),
-                  "links": $('a').map((i, el) => $(el).attr('href')).get()
-                }
-                webData.addIndex(data).then((response) => { }).catch((err) => { })
-              })
-            }, 3000);
+            modules.addIndex(origin, new URL(data.links[i]).pathname).then((stat) => {}).catch((err) => {})
+          } else {
+            modules.addIndex(origin, data.links[i]).then((stat) => {}).catch((err) => {})
           }
         }
       });
