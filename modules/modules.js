@@ -1,6 +1,6 @@
+let webData = require('../database/web_data')
 let http = require('url');
 let request = require('request');
-let webData = require('../database/web_data')
 let cheerio = require('cheerio');
 let path = require('path');
 let fs = require('fs');
@@ -27,15 +27,21 @@ module.exports = {
                         data.links.forEach(link => {
                             if (!link.startsWith('http')) {
                                 if (!link.startsWith('//')) {
-                                    request(urlData.origin + link, (error, response, body) => {
-                                        if (!error && response.statusCode == 200) {
-                                            webData.addIndex(new URL(urlData.origin + link)).then((res) => {
-                                                console.log(res)
-                                            }).catch((err) => {
-                                                console.log(err)
-                                            })
-                                        }
-                                    })
+                                    setTimeout(() => {
+                                        request(urlData.origin + link, (error, response, body) => {
+                                            try {
+                                                if (!error && response.statusCode == 200) {
+                                                    webData.addIndex(new URL(urlData.origin + link)).then((res) => {
+                                                        console.log(res)
+                                                    }).catch((err) => {
+                                                        console.log(err)
+                                                    })
+                                                }
+                                            } catch (err) {
+                                                console.error(err)
+                                            }
+                                        })
+                                    }, 3000);
                                 }
                             }
                         })
