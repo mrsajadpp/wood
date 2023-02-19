@@ -25,12 +25,10 @@ module.exports = {
                         "description": $('meta[name="description"]').attr('content'),
                         "links": $('a').map((i, el) => $(el).attr('href')).get()
                     }
-                    webData.addIndex(data).then((response) => { }).catch((err) => { })
+                    webData.addIndex(data).then((response) => { }).catch((err) => {})
                 })
-                resolve({ status: 200, message: 'succes' })
             } catch (err) {
                 console.error(err)
-                reject({ status: 500, message: 'internal server error' })
             }
         })
     }
