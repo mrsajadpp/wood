@@ -6,28 +6,6 @@ let path = require('path');
 let fs = require('fs');
 
 module.exports = {
-    addIndex: (origin, pathname) => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                let url = new URL(origin + pathname);
-                request(url.href, (error, response, body) => {
-                    if (!error && response.statusCode == 200) {
-                        // Load HTML content into Cheerio
-                        let $ = cheerio.load(body);
-                        let data = {
-                            "url": url,
-                            "title": $('title').text(),
-                            "description": $('meta[name="description"]').attr('content'),
-                            "links": $('a').map((i, el) => $(el).attr('href')).get()
-                        }
-                        webData.addIndex(data).then((res) => { }).catch((err) => { })
-                    }
-                })
-            } catch (err) {
-                console.error(err)
-            }
-        })
-    },
     crawl: (urlData) => {
         return new Promise((resolve, reject) => {
             try {
@@ -51,7 +29,11 @@ module.exports = {
                                 if (!link.startsWith('//')) {
                                     request(urlData.origin + link, (error, response, body) => {
                                         if (!error && response.statusCode == 200) {
-                                            webData.addIndex(new URL(urlData.origin + link)).then((res) => { }).catch((err) => { })
+                                            webData.addIndex(new URL(urlData.origin + link)).then((res) => {
+                                                console.log(res)
+                                            }).catch((err) => {
+                                                console.log(err)
+                                            })
                                         }
                                     })
                                 }
