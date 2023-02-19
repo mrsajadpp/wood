@@ -1,4 +1,3 @@
-let webData = require('../database/web_data')
 let http = require('url');
 let request = require('request');
 let cheerio = require('cheerio');
@@ -14,6 +13,7 @@ module.exports = {
                     if (!error && response.statusCode == 200) {
                         // Load HTML content into Cheerio
                         let $ = cheerio.load(body);
+                        let webData = require('../database/web_data')
                         let data = {
                             "url": urlData.href,
                             "url_data": urlData,
@@ -41,7 +41,7 @@ module.exports = {
                                                 console.error(err)
                                             }
                                         })
-                                    }, 3000);
+                                    }, 10000);
                                 }
                             }
                         })
