@@ -31,11 +31,7 @@ module.exports = {
                                         request(urlData.origin + link, (error, response, body) => {
                                             try {
                                                 if (!error && response.statusCode == 200) {
-                                                    webData.addIndex(new URL(urlData.origin + link)).then((res) => {
-                                                        console.log(res)
-                                                    }).catch((err) => {
-                                                        console.log(err)
-                                                    })
+                                                    webData.addIndex(new URL(urlData.origin + link)).then((res) => {}).catch((err) => {})
                                                 }
                                             } catch (err) {
                                                 console.error(err)
