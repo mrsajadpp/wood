@@ -1,32 +1,30 @@
 const db = require('./config.js')
+const modules = require('../modules/modules')
 const COLLECTIONS = require('./collections.js');
 const ObjectId = require('mongodb').ObjectID;
 
 module.exports = {
-    addIndex: (data) => {
-        try {
-            return new Promise(async (resolve, reject) => {
-                if (data.url && data.title && data.description) {
-                    let index = await db.get().collection(COLLECTIONS.INDEX).findOne({ url: data.url })
-                    if (index) {
-                        if (data.url !== index.url && data.title !== index.title) {
-                            db.get().collection(COLLECTIONS.INDEX).insertOne(data).then((res) => {
-                                resolve({ status: false })
+    addIndex: (urlData) => {
+        return new Promise((resolve, reject) => {
+            try {
+                db.get().collection(COLLECTIONS.INDEX).findOne({ url: urlData.href }).then((page) => {
+                    if (!page) {
+                        modules.crawl(urlData).then(async (pageData) => {
+                            db.get().collection(COLLECTIONS.INDEX).insertOne(pageData).then((insertData) => {
+                                resolve({ message: 'Page indexed succesfully.' })
                             })
-                        } else {
-                            reject({ status: 404 })
-                        }
-                    } else {
-                        db.get().collection(COLLECTIONS.INDEX).insertOne(data).then((res) => {
-                            resolve({ status: false })
+                        }).catch((err) => {
+                            reject({ error: err.error })
                         })
+                    } else {
+                        reject({ error: 'Page is already indexed!.' })
                     }
-                }
-            })
-        } catch (err) {
-            // Error handling
-            console.error(err)
-        }
+                })
+            } catch (err) {
+                // Error handling
+                console.error(err)
+            }
+        })
     },
     getIndex: () => {
         try {
