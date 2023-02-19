@@ -89,8 +89,11 @@
     line-height: 18px;
     font-weight: normal;
     color: #1db954;
-    margin-bottom: 0px;
     margin-top: 25px;
+}
+
+.searchresult h2:hover {
+    color: #72f19e;
 }
 
 .a {
@@ -98,7 +101,12 @@
 }
 
 .searchresult p {
-    width: 625px;
+    line-height: 18px;
     font-size: 13px;
+    font-weight: normal;
     color: rgb(82, 82, 82);
+}
+
+.searchresult p:hover {
+    color: rgb(160, 158, 158);
 }
