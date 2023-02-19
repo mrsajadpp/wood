@@ -10,7 +10,6 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
                 let url = new URL(origin + pathname);
-                console.log(url)
                 request(url.href, (error, response, body) => {
                     if (error) {
                         console.error(`Error crawling ${url.href}: ${error}`);

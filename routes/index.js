@@ -22,30 +22,36 @@ router.get('/', (req, res, next) => {
 
 router.get('/search', (req, res, next) => {
   try {
-    webData.getIndex().then((indexData) => {
-      const index = elasticlunr(function () {
-        this.addField('title');
-        this.addField('description');
-        this.setRef('url');
-      });
-      indexData.forEach(page => {
-        index.addDoc({
-          url: page.url,
-          title: page.title,
-          description: page.description
+    if (req.query.q.startsWith('http://') || req.query.q.startsWith('https://')) {
+      let url = new URL(req.query.q)
+      res.redirect(url.href)
+      modules.addIndex(url.origin, url.pathname).then((stat) = {}).catch((err) => { })
+    } else {
+      webData.getIndex().then((indexData) => {
+        const index = elasticlunr(function () {
+          this.addField('title');
+          this.addField('description');
+          this.setRef('url');
         });
-      });
-      const results = index.search(req.query.q);
-      let resul = [];
-      results.forEach(result => {
         indexData.forEach(page => {
-          if (page.url == result.ref) {
-            resul.push(page)
-          }
-        })
-      });
-      res.render('result', { title: req.query.q, description: `Found ${results.length} results for '${req.query.q}'`, style: 'result', status: false, pages: resul, q: req.query.q })
-    })
+          index.addDoc({
+            url: page.url,
+            title: page.title,
+            description: page.description
+          });
+        });
+        const results = index.search(req.query.q);
+        let resul = [];
+        results.forEach(result => {
+          indexData.forEach(page => {
+            if (page.url == result.ref) {
+              resul.push(page)
+            }
+          })
+        });
+        res.render('result', { title: req.query.q, description: `Found ${results.length} results for '${req.query.q}'`, style: 'result', status: false, pages: resul, q: req.query.q })
+      })
+    }
   } catch (err) {
     console.error(err)
   }
@@ -89,9 +95,9 @@ router.post('/index', (req, res, next) => {
         })
         for (let i = 0; i < data.links.length; i++) {
           if (data.links[i].startsWith('https://') || data.links[i].startsWith('http://')) {
-            modules.addIndex(origin, new URL(data.links[i]).pathname).then((stat) => {}).catch((err) => {})
+            modules.addIndex(origin, new URL(data.links[i]).pathname).then((stat) => { }).catch((err) => { })
           } else {
-            modules.addIndex(origin, data.links[i]).then((stat) => {}).catch((err) => {})
+            modules.addIndex(origin, data.links[i]).then((stat) => { }).catch((err) => { })
           }
         }
       });
