@@ -24,7 +24,7 @@ module.exports = {
                             "links": $('a').map((i, el) => $(el).attr('href')).get()
                         }
                         resolve(data)
-                        data.links.forEach(link => {
+                        /*data.links.forEach(link => {
                             if (!link.startsWith('http')) {
                                 if (!link.startsWith('//')) {
                                     request(urlData.origin + link, (error, response, body) => {
@@ -38,7 +38,7 @@ module.exports = {
                                     })
                                 }
                             }
-                        })
+                        })*/
                     } else {
                         reject({ error: 'Url is not valid!.' })
                     }

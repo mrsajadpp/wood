@@ -1,6 +1,6 @@
-let webData = require('../database/web_data')
-let userData = require('../database/user_data')
-let modules = require('../modules/modules')
+let webData = require('../database/web_data');
+let userData = require('../database/user_data');
+let modules = require('../modules/modules');
 let http = require('url');
 let express = require('express');
 let path = require('path');
@@ -10,7 +10,7 @@ let cheerio = require('cheerio');
 let elasticlunr = require('elasticlunr');
 let router = express.Router();
 
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     // Search page delivery
     res.render('search', { title: 'Search anything in wood', description: 'World number 1 search engine powered by Trace inc', style: 'search', status: false })
@@ -18,53 +18,52 @@ router.get('/', (req, res, next) => {
     // Error handling
     console.error(err)
   }
-})
+});
 
 router.get('/search', async (req, res, next) => {
   try {
     if (req.query.q.startsWith('http://') || req.query.q.startsWith('https://')) {
-      let url = new URL(req.query.q)
-      res.redirect(url.href)
-      await modules.addIndex(url.origin, url.pathname).then((stat) = {}).catch((err) => { })
+      let url = new URL(req.query.q);
+      res.redirect(url.href);
+      await modules.addIndex(url.origin, url.pathname).then((stat) => { }).catch((err) => { });
     } else {
-      await webData.getIndex().then((indexData) => {
-        let index = elasticlunr(function () {
-          this.addField('title');
-          this.addField('description');
-          this.setRef('url');
+      const indexData = await webData.getIndex();
+      let index = elasticlunr(function () {
+        this.addField('title');
+        this.addField('description');
+        this.setRef('url');
+      });
+      indexData.forEach(page => {
+        index.addDoc({
+          url: page.url,
+          title: page.title,
+          description: page.description
         });
+      });
+      let results = index.search(req.query.q);
+      let resul = [];
+      results.forEach(result => {
         indexData.forEach(page => {
-          index.addDoc({
-            url: page.url,
-            title: page.title,
-            description: page.description
-          });
-        });
-        let results = index.search(req.query.q);
-        let resul = [];
-        results.forEach(result => {
-          indexData.forEach(page => {
-            if (page.url == result.ref) {
-              resul.push(page)
-            }
-          })
-        });
-        res.render('result', { title: req.query.q, description: `Found ${results.length} results for '${req.query.q}'`, style: 'result', status: false, pages: resul, q: req.query.q })
-      })
+          if (page.url == result.ref) {
+            resul.push(page)
+          }
+        })
+      });
+      res.render('result', { title: req.query.q, description: `Found ${results.length} results for '${req.query.q}'`, style: 'result', status: false, pages: resul, q: req.query.q })
     }
   } catch (err) {
     console.error(err)
   }
-})
+});
 
-router.get('/index', (req, res, next) => {
+router.get('/index', async (req, res, next) => {
   try {
     res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: false })
   } catch (err) {
     // Error handling
     console.error(err)
   }
-})
+});
 
 router.post('/index', async (req, res, next) => {
   try {
@@ -84,7 +83,7 @@ router.post('/index', async (req, res, next) => {
     // Error handling
     console.error(err)
   }
-})
+});
 
 router.get('/robots.txt', (req, res, next) => {
   try {
