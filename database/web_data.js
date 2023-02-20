@@ -10,8 +10,18 @@ module.exports = {
                 db.get().collection(COLLECTIONS.INDEX).findOne({ url: urlData.href }).then((page) => {
                     if (!page) {
                         modules.crawl(urlData).then(async (pageData) => {
-                            db.get().collection(COLLECTIONS.INDEX).insertOne(pageData).then((insertData) => {
-                                resolve({ message: 'Page indexed succesfully.' })
+                            db.get().collection(COLLECTIONS.INDEX).findOne({ title: pageData.title }).then((Page) => {
+                                if (!Page) {
+                                    db.get().collection(COLLECTIONS.INDEX).insertOne(pageData).then((insertData) => {
+                                        resolve({ message: 'Page indexed succesfully.' })
+                                    }).catch((err) => {
+                                        reject({ error: err.error })
+                                    })
+                                } else {
+                                    reject({ error: 'Page is already indexed!.' })
+                                }
+                            }).catch((err) => {
+                                reject({ error: err.error })
                             })
                         }).catch((err) => {
                             reject({ error: err.error })
