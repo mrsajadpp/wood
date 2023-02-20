@@ -20,14 +20,14 @@ router.get('/', (req, res, next) => {
   }
 })
 
-router.get('/search', (req, res, next) => {
+router.get('/search', async (req, res, next) => {
   try {
     if (req.query.q.startsWith('http://') || req.query.q.startsWith('https://')) {
       let url = new URL(req.query.q)
       res.redirect(url.href)
-      modules.addIndex(url.origin, url.pathname).then((stat) = {}).catch((err) => { })
+      await modules.addIndex(url.origin, url.pathname).then((stat) = {}).catch((err) => { })
     } else {
-      webData.getIndex().then((indexData) => {
+      await webData.getIndex().then((indexData) => {
         let index = elasticlunr(function () {
           this.addField('title');
           this.addField('description');
@@ -66,10 +66,10 @@ router.get('/index', (req, res, next) => {
   }
 })
 
-router.post('/index', (req, res, next) => {
+router.post('/index', async (req, res, next) => {
   try {
     if (req.body.url) {
-      let url = new URL(req.body.url);
+      let url = await new URL(req.body.url);
       webData.addIndex(url).then((response) => {
         res.redirect('/index')
       }).catch((err) => {

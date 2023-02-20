@@ -4,7 +4,7 @@ let state = {
 }
 function connect(done) {
   try {
-    let url = 'mongodb+srv://sajad:310410@cluster0.okcmril.mongodb.net/?retryWrites=true&w=majority'
+    let url = 'mongodb://localhost:27017/'
     let dbname = 'wood';
     MongoClient.connect(url, (err, data) => {
       if (err) return done(err);

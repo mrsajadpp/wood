@@ -27,17 +27,15 @@ module.exports = {
                         data.links.forEach(link => {
                             if (!link.startsWith('http')) {
                                 if (!link.startsWith('//')) {
-                                    setTimeout(() => {
-                                        request(urlData.origin + link, (error, response, body) => {
-                                            try {
-                                                if (!error && response.statusCode == 200) {
-                                                    webData.addIndex(new URL(urlData.origin + link)).then((res) => {}).catch((err) => {})
-                                                }
-                                            } catch (err) {
-                                                console.error(err)
+                                    request(urlData.origin + link, (error, response, body) => {
+                                        try {
+                                            if (!error && response.statusCode == 200) {
+                                                webData.addIndex(new URL(urlData.origin + link)).then((res) => { }).catch((err) => { })
                                             }
-                                        })
-                                    }, 10000);
+                                        } catch (err) {
+                                            console.error(err)
+                                        }
+                                    })
                                 }
                             }
                         })
