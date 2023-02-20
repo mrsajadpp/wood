@@ -1,66 +1,44 @@
-let webData = require('../database/web_data');
-let userData = require('../database/user_data');
-let modules = require('../modules/modules');
-let http = require('url');
-let express = require('express');
-let path = require('path');
-let fs = require('fs');
-let request = require('request');
-let cheerio = require('cheerio');
-let elasticlunr = require('elasticlunr');
-let router = express.Router();
+// import the required libraries and modules
+const express = require('express');
+const webData = require('../database/web_data');
+const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   try {
-    // Search page delivery
+    // deliver the search page
     res.render('search', { title: 'Search anything in wood', description: 'World number 1 search engine powered by Trace inc', style: 'search', status: false })
   } catch (err) {
-    // Error handling
+    // handle errors
     console.error(err)
   }
 });
 
 router.get('/search', async (req, res, next) => {
   try {
-    if (req.query.q.startsWith('http://') || req.query.q.startsWith('https://')) {
-      let url = new URL(req.query.q);
-      res.redirect(url.href);
-      await modules.addIndex(url.origin, url.pathname).then((stat) => { }).catch((err) => { });
+    // extract the query from the request
+    const query = req.query.q;
+
+    if (query.startsWith('http://') || query.startsWith('https://')) {
+      // if the query is a URL, redirect to it and add it to the index
+      const url = new URL(query);
+      res.redirect(`${url.origin}${url.pathname}`);
+      await webData.addIndex(url);
     } else {
-      const indexData = await webData.getIndex();
-      let index = elasticlunr(function () {
-        this.addField('title');
-        this.addField('description');
-        this.setRef('url');
-      });
-      indexData.forEach(page => {
-        index.addDoc({
-          url: page.url,
-          title: page.title,
-          description: page.description
-        });
-      });
-      let results = index.search(req.query.q);
-      let resul = [];
-      results.forEach(result => {
-        indexData.forEach(page => {
-          if (page.url == result.ref) {
-            resul.push(page)
-          }
-        })
-      });
-      res.render('result', { title: req.query.q, description: `Found ${results.length} results for '${req.query.q}'`, style: 'result', status: false, pages: resul, q: req.query.q })
+      // if the query is not a URL, search the index and deliver the results
+      const results = await webData.searchIndex(query);
+      res.render('result', { title: query, description: `Found ${results.length} results for '${query}'`, style: 'result', status: false, pages: results, q: query });
     }
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
 });
 
 router.get('/index', async (req, res, next) => {
   try {
+    // deliver the index page
     res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: false })
   } catch (err) {
-    // Error handling
+    // handle errors
     console.error(err)
   }
 });
@@ -68,30 +46,35 @@ router.get('/index', async (req, res, next) => {
 router.post('/index', async (req, res, next) => {
   try {
     if (req.body.url) {
+      // if the request contains a URL to index, add it to the index
       let url = await new URL(req.body.url);
       webData.addIndex(url).then((response) => {
         res.redirect('/index')
       }).catch((err) => {
-        if (err.error == 'Url is not valid!.') {
-          res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry this page is not exist." })
+        // handle errors based on the type of error
+        if (err.error == 'Page is already indexed!') {
+          res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry this page is already indexed you can't index this page." })
+        } else if (err.error == "You can't index this page!") {
+          res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry you can't index this page." })
         } else {
-          res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry this page is already indexed you cant index this page." })
+          res.render('index', { title: 'Index your pages in wood', description: 'Index your pages in wood', style: 'search', status: true, err: "Sorry this page is not exist." })
         }
       })
     }
   } catch (err) {
-    // Error handling
+    // handle errors
     console.error(err)
   }
 });
 
 router.get('/robots.txt', (req, res, next) => {
   try {
+    // deliver the robots.txt file
     res.sendFile(path.resolve(__dirname, 'seo', 'robots.txt'));
   } catch (err) {
     console.error(err)
   }
-})
+});
 
-
+// export the router
 module.exports = router;
