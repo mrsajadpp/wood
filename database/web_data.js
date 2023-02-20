@@ -10,19 +10,23 @@ module.exports = {
                 db.get().collection(COLLECTIONS.INDEX).findOne({ url: urlData.href }).then((page) => {
                     if (!page) {
                         modules.crawl(urlData).then(async (pageData) => {
-                            db.get().collection(COLLECTIONS.INDEX).findOne({ title: pageData.title }).then((Page) => {
-                                if (!Page) {
-                                    db.get().collection(COLLECTIONS.INDEX).insertOne(pageData).then((insertData) => {
-                                        resolve({ message: 'Page indexed succesfully.' })
-                                    }).catch((err) => {
-                                        reject({ error: err.error })
-                                    })
-                                } else {
-                                    reject({ error: 'Page is already indexed!.' })
-                                }
-                            }).catch((err) => {
-                                reject({ error: err.error })
-                            })
+                            if (pageData.title && pageData.description) {
+                                db.get().collection(COLLECTIONS.INDEX).findOne({ title: pageData.title }).then((Page) => {
+                                    if (!Page) {
+                                        db.get().collection(COLLECTIONS.INDEX).insertOne(pageData).then((insertData) => {
+                                            resolve({ message: 'Page indexed succesfully.' })
+                                        }).catch((err) => {
+                                            reject({ error: err.error })
+                                        })
+                                    } else {
+                                        reject({ error: 'Page is already indexed!.' })
+                                    }
+                                }).catch((err) => {
+                                    reject({ error: err.error })
+                                })
+                            } else {
+                                reject({ error: "You can't index this page!." })
+                            }
                         }).catch((err) => {
                             reject({ error: err.error })
                         })
