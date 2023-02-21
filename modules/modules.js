@@ -19,8 +19,9 @@ module.exports = {
                 // Load HTML content into Cheerio
                 let $ = cheerio.load(response.body);
                 let webData = require('../database/web_data')
+                console.log(urlData.href)
                 let data = {
-                    "url": urlData.href + urlData.pathname,
+                    "url": urlData.href,
                     "url_data": urlData,
                     "title": $('title').text(),
                     "favicon": $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href'),

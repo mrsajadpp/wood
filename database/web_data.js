@@ -7,7 +7,7 @@ const ObjectId = require('mongodb').ObjectID; // Import the ObjectId method from
 module.exports = {
     addIndex: async (urlData) => { // Method to add a new page to the index
         try {
-            const page = await db.get().collection(COLLECTIONS.INDEX).findOne({ url: urlData.href + urlData.pathname }); // Check if the page is already in the index
+            const page = await db.get().collection(COLLECTIONS.INDEX).findOne({ url: urlData.href }); // Check if the page is already in the index
 
             if (page) { // If the page is already in the index, throw an error
                 throw { error: 'Page is already indexed!' };
