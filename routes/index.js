@@ -26,8 +26,11 @@ router.get('/search', async (req, res, next) => {
       await webData.addIndex(url);
     } else {
       // if the query is not a URL, search the index and deliver the results
-      const results = await webData.searchIndex(query);
-      res.render('result', { title: query, description: `Found ${results.length} results for '${query}'`, style: 'result', status: false, pages: results, q: query });
+      webData.searchIndex(query).then((results) => {
+        res.render('result', { title: query, description: `Found '${results.length}' results for '${query}'`, style: 'result', status: false, pages: results, q: query });
+      }).catch((err) => {
+        res.render('result', { title: query, description: `No results found for '${query}'`, style: 'result', status: false, pages: false, q: query });
+      });
     }
   } catch (err) {
     console.error(err);
