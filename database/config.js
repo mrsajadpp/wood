@@ -4,7 +4,7 @@ let state = {
 }
 function connect(done) {
   try {
-    let url = 'mongodb://localhost:27017/'
+    let url = process.env.string
     let dbname = 'wood';
     MongoClient.connect(url, (err, data) => {
       if (err) return done(err);
