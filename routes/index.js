@@ -2,6 +2,7 @@
 const express = require('express');
 const webData = require('../database/web_data');
 const router = express.Router();
+const path = require('path');
 
 router.get('/', async (req, res, next) => {
   try {
@@ -71,6 +72,15 @@ router.get('/robots.txt', (req, res, next) => {
   try {
     // deliver the robots.txt file
     res.sendFile(path.resolve(__dirname, 'seo', 'robots.txt'));
+  } catch (err) {
+    console.error(err)
+  }
+});
+
+router.get('/sitemap.xml', (req, res, next) => {
+  try {
+    // deliver the sitemap.xml file
+    res.sendFile(path.resolve(__dirname, 'seo', 'sitemap.xml'));
   } catch (err) {
     console.error(err)
   }

@@ -1,6 +1,3 @@
 User-agent: *
-Allow: /
-Allow: /*.png$
-Allow: /*.jpg$
-Allow: /*.mp4$
-Disallow: /search?
+Allow: /index
+Allow: /search?q=*
