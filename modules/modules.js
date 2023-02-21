@@ -20,11 +20,12 @@ module.exports = {
                 let $ = cheerio.load(response.body);
                 let webData = require('../database/web_data')
                 let data = {
-                    "url": urlData.href,
+                    "url": urlData.href + urlData.pathname,
                     "url_data": urlData,
                     "title": $('title').text(),
                     "favicon": $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href'),
-                    "description": $('meta[name="description"]').attr('content') || $('h1').text() || $('h2').text(),
+                    "description": $('meta[name="description"]').attr('content') || $('h1').text() || $('h2').text() || $('p').text(),
+                    "keywords": $('meta[name="keywords"]').attr('content'),
                     "html": $.html(),
                     "links": $('a').map((i, el) => $(el).attr('href')).get()
                 }
