@@ -199,3 +199,16 @@
 .green-text {
     color: #1db954;
 }
+
+.flex-column {
+    max-width: 260px;
+}
+
+img {
+    margin: 5px;
+}
+
+.scale {
+    transform: scaleY(1.05);
+    padding-top: 5px;
+}

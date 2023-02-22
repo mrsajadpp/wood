@@ -1,21 +1,25 @@
 {{>search}}
-<div class="container" id="searchresultsarea">
-    <div class="space"></div>
-    {{#if pages}}
-    <div class="images">
-        {{#each pages}}
-        {{#each this.images}}
-        <a href="{{../this.url}}" class="a">
-            <div class="searchresult">
-                <img src="{{../this.url}}{{this}}" alt="{{../this.url}}">
+{{#if pages}}
+<div class="space"></div>
+<section>
+    <div class="container-fluid">
+        <div class="d-flex flex-row flex-wrap justify-content-center">
+            {{#each pages}}
+            {{#each this.images}}
+            <div class="d-flex flex-column">
+                <a href="{{../this.url}}">
+                    <img src="{{../this.url_data.origin}}{{this}}" class="img-fluid">
+                </a>
             </div>
-        </a>
-        {{/each}}
-        {{/each}}
+            {{/each}}
+            {{/each}}
+        </div>
     </div>
-    {{else}}
+</section>
+{{else}}
+<div class="container" id="searchresultsarea">
     <div class="notfound">
         <span class="text">No results <span class="green-text">found</span>!</span>
     </div>
-    {{/if}}
 </div>
+{{/if}}

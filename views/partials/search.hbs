@@ -6,6 +6,7 @@
         <div class="search-area">
             <form action="/search" method="get">
                 <input type="search" name="q" id="q" placeholder="Search" value="{{q}}" required>
+                <input type="text" hidden name="img" id="image">
                 <button type="submit"><box-icon name='search'></box-icon></button>
             </form>
         </div>
@@ -47,6 +48,7 @@
 
         if (id == 'b') {
             section.style.borderBottom = '#F4B400 1px solid';
+            document.getElementById('image').value = true
         }
 
         if (id == 'c') {
