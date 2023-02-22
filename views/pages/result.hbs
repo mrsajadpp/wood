@@ -1,25 +1,12 @@
-<div class="container top">
-    <div class="search-box">
-        <div class="banner-area">
-            <img src="/images/favicon.png" alt="Wood" class="banner">
-        </div>
-        <div class="search-area">
-            <form action="/search" method="get">
-                <input type="search" name="q" id="q" placeholder="Search" value="{{q}}" required>
-                <button type="submit"><box-icon name='search'></box-icon></button>
-            </form>
-        </div>
-    </div>
-</div>
-
+{{>search}}
 <div class="container" id="searchresultsarea">
     <div class="space"></div>
     {{#if pages}}
     {{#each pages}}
     <a href="{{this.url}}" class="a">
         <div class="searchresult">
-            <h2>{{this.title}}</h2>
-            <p>{{this.description}}</p>
+            <h2 id="resultTitle">{{this.title}}</h2>
+            <p id="resultDescription">{{this.description}}</p>
         </div>
     </a>
     {{/each}}

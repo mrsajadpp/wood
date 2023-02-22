@@ -25,12 +25,21 @@ router.get('/search', async (req, res, next) => {
       res.redirect(`${url.origin}${url.pathname}`);
       await webData.addIndex(url);
     } else {
-      // if the query is not a URL, search the index and deliver the results
-      webData.searchIndex(query).then((results) => {
-        res.render('result', { title: query, description: `Found '${results.length}' results for '${query}'`, style: 'result', status: false, pages: results, q: query });
-      }).catch((err) => {
-        res.render('result', { title: query, description: `No results found for '${query}'`, style: 'result', status: false, pages: false, q: query });
-      });
+      if (req.query.img) {
+        // if the query is not a URL, search the index and deliver the results
+        webData.searchImage(query).then((results) => {
+          res.render('image', { title: query, description: `Found '${results.length}' results for '${query}'`, style: 'result', status: false, pages: results, q: query, id: 'b' });
+        }).catch((err) => {
+          res.render('image', { title: query, description: `No results found for '${query}'`, style: 'result', status: false, pages: false, q: query, id: 'b' });
+        });
+      } else {
+        // if the query is not a URL, search the index and deliver the results
+        webData.searchIndex(query).then((results) => {
+          res.render('result', { title: query, description: `Found '${results.length}' results for '${query}'`, style: 'result', status: false, pages: results, q: query, id: 'a' });
+        }).catch((err) => {
+          res.render('result', { title: query, description: `No results found for '${query}'`, style: 'result', status: false, pages: false, q: query, id: 'a' });
+        });
+      }
     }
   } catch (err) {
     console.error(err);

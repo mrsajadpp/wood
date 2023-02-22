@@ -1,0 +1,21 @@
+{{>search}}
+<div class="container" id="searchresultsarea">
+    <div class="space"></div>
+    {{#if pages}}
+    <div class="images">
+        {{#each pages}}
+        {{#each this.images}}
+        <a href="{{../this.url}}" class="a">
+            <div class="searchresult">
+                <img src="{{../this.url}}{{this}}" alt="{{../this.url}}">
+            </div>
+        </a>
+        {{/each}}
+        {{/each}}
+    </div>
+    {{else}}
+    <div class="notfound">
+        <span class="text">No results <span class="green-text">found</span>!</span>
+    </div>
+    {{/if}}
+</div>

@@ -27,6 +27,7 @@ module.exports = {
                     "favicon": $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href'),
                     "description": $('meta[name="description"]').attr('content') || $('h1').text() || $('h2').text() || $('p').text(),
                     "keywords": $('meta[name="keywords"]').attr('content'),
+                    "images": $('img').map((i, el) => $(el).attr('src')).get(),
                     "html": $.html(),
                     "links": $('a').map((i, el) => $(el).attr('href')).get()
                 }

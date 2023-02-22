@@ -1,0 +1,65 @@
+<div class="container top">
+    <div class="search-box">
+        <div class="banner-area">
+            <img src="/images/favicon.png" alt="Wood" class="banner">
+        </div>
+        <div class="search-area">
+            <form action="/search" method="get">
+                <input type="search" name="q" id="q" placeholder="Search" value="{{q}}" required>
+                <button type="submit"><box-icon name='search'></box-icon></button>
+            </form>
+        </div>
+    </div>
+    <div class="tools">
+        <div class="tool">
+            <a href="/search?q={{q}}" id="a">
+                <button id="all"><box-icon name='search' color="#1db954"></box-icon>&nbsp;All</button>
+            </a>
+        </div>
+        <div class="tool">
+            <a href="/search?q={{q}}&img=true" id="b">
+                <button id="img"><box-icon name='image' color="#F4B400"></box-icon>&nbsp;Images</button>
+            </a>
+        </div>
+        <div class="tool">
+            <a href="https://google.com/search?q={{q}}" id="c">
+                <button id="google"><box-icon type='logo' name='google' color="#DB4437"></box-icon>&nbsp;Google</button>
+            </a>
+        </div>
+        <div class="tool">
+            <a href="/about" id="d">
+                <button id="about"><box-icon name='code-alt' color="#4285F4"></box-icon>&nbsp;About</button>
+            </a>
+        </div>
+        <div class="tool">
+            <a href="/donate" id="e">
+                <button id="donate"><box-icon name='donate-heart' color="#1db954"></box-icon>&nbsp;Donate</button>
+            </a>
+        </div>
+    </div>
+</div>
+<script>
+    function addTheme(id) {
+        let section = document.getElementById(id);
+        if (id == 'a') {
+            section.style.borderBottom = '#1db954 1px solid';
+        }
+
+        if (id == 'b') {
+            section.style.borderBottom = '#F4B400 1px solid';
+        }
+
+        if (id == 'c') {
+            section.style.borderBottom = '#DB4437 1px solid';
+        }
+
+        if (id == 'd') {
+            section.style.borderBottom = '#4285F4 1px solid';
+        }
+
+        if (id == 'e') {
+            section.style.borderBottom = '#1db954 1px solid';
+        }
+    }
+    window.onload = addTheme('{{id}}');
+</script>

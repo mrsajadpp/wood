@@ -2,6 +2,9 @@ const db = require('./config.js'); // Import the configuration file for the data
 const modules = require('../modules/modules'); // Import the modules for web crawling
 const COLLECTIONS = require('./collections.js'); // Import the collections from the database
 const Fuse = require('fuse.js'); // Import the Fuse.js library for searching and filtering data
+let request = require('request');
+const util = require('util');
+const requestPromise = util.promisify(request);
 const ObjectId = require('mongodb').ObjectID; // Import the ObjectId method from the MongoDB library
 
 module.exports = {
@@ -50,7 +53,7 @@ module.exports = {
             const indexData = await db.get().collection(COLLECTIONS.INDEX).find().toArray(); // Find all the documents in the index collection
 
             const fuse = new Fuse(indexData, { // Create a new Fuse object
-                keys: ['title', 'description', 'keywords'], // Specify the keys to search in
+                keys: ['title', 'description', 'keywords', 'url'], // Specify the keys to search in
                 includeScore: true, // Include the search score in the results
                 threshold: 0.4, // Adjust the search result relevance
             });
@@ -65,6 +68,89 @@ module.exports = {
         } catch (err) {
             console.error(err); // Log any errors
             throw err; // Throw the error
+        }
+    },
+    /*searchImage: async (query) => { // Method to search the indexed pages
+        try {
+            const indexData = await db.get().collection(COLLECTIONS.INDEX).find().toArray(); // Find all the documents in the index collection
+
+            let pages = []
+
+            indexData.forEach(page => {
+                console.log(page.images.length)
+                if (page.images.length > 0) {
+                    request(page.origin + page.images, (error, response, body) => {
+                        if (!error && response.statusCode == 200) { pages.push(page) }
+                    })
+                }
+            });
+
+            const fuse = new Fuse(pages, { // Create a new Fuse object
+                keys: ['title', 'description', 'keywords', 'url'], // Specify the keys to search in
+                includeScore: true, // Include the search score in the results
+                threshold: 0.4, // Adjust the search result relevance
+            });
+
+            const results = fuse.search(query); // Search the index for the query string
+
+            if (results.length === 0) {
+                throw { error: 'No search results found.' };
+            }
+
+            if (pages.length === 0) {
+                throw { error: 'No search results found.' };
+            }
+
+            return results.map((result) => result.item); // Return the search results as an array of pages
+        } catch (err) {
+            console.error(err); // Log any errors
+            throw err; // Throw the error
+        }
+    }*/
+    searchImage: async (query) => {
+        try {
+            const indexData = await db.get().collection(COLLECTIONS.INDEX).find().toArray();
+
+            let pages = []
+
+            for (const page of indexData) {
+                if (page.images.length > 0) {
+                    if (page.url_data.origin.endsWith('/')) {
+                        const response = await requestPromise(page.url_data.origin + page.images);
+                        console.log(page.url_data.origin + page.images)
+                        if (response.statusCode == 200) {
+                            pages.push(page);
+                        }
+                    } else {
+                        const response = await requestPromise(page.url_data.origin + '/' + page.images);
+                        console.log(page.url_data.origin + '/' + page.images)
+                        if (response.statusCode == 200) {
+                            pages.push(page);
+                        }
+                    }
+                }
+            }
+
+            const fuse = new Fuse(pages, {
+                keys: ['title', 'description', 'keywords', 'url'],
+                includeScore: true,
+                threshold: 0.4,
+            });
+
+            const results = fuse.search(query);
+
+            if (results.length === 0) {
+                throw { error: 'No search results found.' };
+            }
+
+            if (pages.length === 0) {
+                throw { error: 'No search results found.' };
+            }
+
+            return results.map((result) => result.item);
+        } catch (err) {
+            console.error(err);
+            throw err;
         }
     }
 };
