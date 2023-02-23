@@ -77,14 +77,15 @@ module.exports = {
             const pages = [];
 
             for (const page of indexData) {
-                if (page.images.length > 0) {
-                    const url = page.url_data.origin.endsWith('/') ? page.url_data.origin + page.images : page.url_data.origin + '/' + page.images;
-                    page.url_data.origin = page.url_data.origin.endsWith('/') ? page.url_data.origin : page.url_data.origin + '/';
-                    console.log(url)
-                    const response = await requestPromise(url);
+                if (page.images) {
+                    if (page.images.length > 0) {
+                        const url = page.url_data.origin.endsWith('/') ? page.url_data.origin + page.images : page.url_data.origin + '/' + page.images;
+                        page.url_data.origin = page.url_data.origin.endsWith('/') ? page.url_data.origin : page.url_data.origin + '/';
+                        const response = await requestPromise(url);
 
-                    if (response.statusCode === 200) {
-                        pages.push(page);
+                        if (response.statusCode === 200) {
+                            pages.push(page);
+                        }
                     }
                 }
             }
@@ -97,7 +98,6 @@ module.exports = {
 
             const results = fuse.search(query);
 
-            console.log(results)
 
             if (results.length === 0) {
                 throw { error: 'No search results found.' };
