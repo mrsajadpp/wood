@@ -1,51 +1,29 @@
-let http = require('url');
-let request = require('request');
-let cheerio = require('cheerio');
-let path = require('path');
-let fs = require('fs');
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 module.exports = {
     crawl: async (urlData) => {
         try {
             // Send HTTP request to URL
-            const response = await new Promise((resolve, reject) => {
-                request(urlData.href, (error, response, body) => {
-                    if (error) reject(error); // reject promise if there is an error
-                    else resolve(response); // resolve promise with the response object
-                });
-            });
+            const response = await axios.get(urlData.href);
 
-            if (response.statusCode == 200) {
+            if (response.status == 200) {
                 // Load HTML content into Cheerio
-                let $ = cheerio.load(response.body);
-                let webData = require('../database/web_data')
-                console.log(urlData.href)
-                let data = {
-                    "url": urlData.href,
-                    "url_data": urlData,
-                    "title": $('title').text(),
-                    "favicon": $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href'),
-                    "description": $('meta[name="description"]').attr('content') || $('h1').text() || $('h2').text() || $('p').text() || 'This is a website',
-                    "keywords": $('meta[name="keywords"]').attr('content'),
-                    "images": $('img').map((i, el) => $(el).attr('src')).get(),
-                    "html": $.html(),
-                    "links": $('a').map((i, el) => $(el).attr('href')).get()
-                }
-                /*data.links.forEach(link => {
-                    if (!link.startsWith('http')) {
-                        if (!link.startsWith('//')) {
-                            request(urlData.origin + link, (error, response, body) => {
-                                try {
-                                    if (!error && response.statusCode == 200) {
-                                        webData.addIndex(new URL(urlData.origin + link)).then((res) => { }).catch((err) => { })
-                                    }
-                                } catch (err) {
-                                    console.error(err)
-                                }
-                            })
-                        }
-                    }
-                })*/
+                const $ = cheerio.load(response.data);
+                console.log(urlData.href);
+
+                const data = {
+                    url: urlData.href,
+                    url_data: urlData,
+                    title: $('title').text(),
+                    favicon: $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href'),
+                    description: $('meta[name="description"]').attr('content') || $('h1').text() || $('h2').text() || $('p').text() || 'This is a website',
+                    keywords: $('meta[name="keywords"]').attr('content'),
+                    images: $('img').map((i, el) => $(el).attr('src')).get(),
+                    html: $.html(),
+                    links: $('a').map((i, el) => $(el).attr('href')).get(),
+                };
+
                 return data; // return data object
             } else {
                 throw new Error('Url is not valid!'); // throw error if URL is not valid
@@ -54,5 +32,5 @@ module.exports = {
             console.error(err);
             throw err; // throw any errors encountered
         }
-    }
-}
+    },
+};
