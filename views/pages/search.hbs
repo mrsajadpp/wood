@@ -5,9 +5,30 @@
         </div>
         <div class="search-area">
             <form action="/search" method="get">
-                <input type="search" name="q" id="q" placeholder="Search" autocomplete="off" required autofocus>
+                <input type="search" name="q" id="q" placeholder="Search" required autofocus>
                 <button type="submit"><box-icon name='search'></box-icon></button>
             </form>
         </div>
     </div>
 </div>
+<script>
+    $(function () {
+        $("#q").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "https://suggestqueries.google.com/complete/search",
+                    dataType: "jsonp",
+                    data: {
+                        q: request.term,
+                        client: "firefox",
+                        ds: "yt"
+                    },
+                    success: function (data) {
+                        response(data[1]);
+                    }
+                });
+            },
+            minLength: 2
+        });
+    });
+</script>

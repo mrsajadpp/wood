@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Google Search Suggestion API HTML Example</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(function () {
+            $("#search-box").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "https://suggestqueries.google.com/complete/search",
+                        dataType: "jsonp",
+                        data: {
+                            q: request.term,
+                            client: "firefox",
+                            ds: "yt"
+                        },
+                        success: function (data) {
+                            response(data[1]);
+                        }
+                    });
+                },
+                minLength: 2
+            });
+        });
+    </script>
+    <style>
+        .ui-autocomplete {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 16px;
+        }
+
+        .ui-menu-item {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .ui-menu-item:hover {
+            background-color: #f4f4f4;
+        }
+
+        .ui-state-active,
+        .ui-state-focus {
+            background-color: #e4e4e4;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <label for="search-box">Search:</label>
+        <input id="search-box" type="text" name="search">
+        <input type="submit" value="Search">
+    </form>
+</body>
+
+</html>
