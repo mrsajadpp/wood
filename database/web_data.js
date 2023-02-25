@@ -108,5 +108,24 @@ module.exports = {
             console.error(err);
             throw err;
         }
+    },
+    searchQ: async (q) => {
+        try {
+            console.log(q)
+            const indexData = await db.get().collection(COLLECTIONS.INDEX).find().toArray();
+
+            const fuse = new Fuse(indexData, {
+                keys: ['title', 'description', 'keywords', 'url'],
+                includeScore: true,
+                threshold: 0.4,
+            });
+
+            const results = fuse.search(q).map((result) => result.item.title);
+
+            return results;
+        } catch (err) {
+            console.error(err);
+            throw err;
+        }
     }
 };

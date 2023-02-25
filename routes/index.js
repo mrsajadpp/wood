@@ -46,6 +46,18 @@ router.get('/search', async (req, res, next) => {
   }
 });
 
+router.get('/query', (req, res, next) => {
+  try {
+    webData.searchQ(req.query.q).then((data) => {
+      res.json(data)
+    }).catch((err) => {
+      console.error(err)
+    })
+  } catch (err) {
+    console.error(err)
+  }
+})
+
 router.get('/index', async (req, res, next) => {
   try {
     // deliver the index page
