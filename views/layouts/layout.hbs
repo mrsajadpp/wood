@@ -31,9 +31,11 @@
 <body>
   {{>loader}}
   <div class="main hide" id="main">
-    {{{body}}}
+    <div class="body">
+      {{{body}}}
+    </div>
     <!--{{>footad}}-->
-    <!--{{>footer}}-->
+    {{>footer}}
   </div>
   <script src="javascripts/script.js"></script>
   <script>

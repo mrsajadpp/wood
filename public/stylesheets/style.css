@@ -40,6 +40,11 @@ body {
 
 .main {
   width: 100vw;
+  height: 100%;
+}
+
+.body {
+  width: 100%;
   height: 100vh;
 }
 
@@ -347,4 +352,49 @@ fieldset img {
 
 .slick-arrow.slick-hidden {
   display: none;
+}
+
+.footer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer .foot-content {
+  width: 100%;
+  height: 100%;
+  background-color: #1db954;
+  color: #0f0f0f;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.foot-content .copyright {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.foot-content .social {
+  width: 100%;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.foot-content .social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #0f0f0f;
+  border-radius: 50px;
 }
