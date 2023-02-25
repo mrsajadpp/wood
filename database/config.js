@@ -13,6 +13,7 @@ function connect(done) {
     done();
   } catch (err) {
     console.error(err)
+    done(err)
   }
 }
 function get() {
