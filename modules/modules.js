@@ -25,7 +25,7 @@ module.exports = {
                     "url_data": urlData,
                     "title": $('title').text(),
                     "favicon": $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href'),
-                    "description": $('meta[name="description"]').attr('content') || $('h1').text() || $('h2').text() || $('p').text(),
+                    "description": $('meta[name="description"]').attr('content') || $('h1').text() || $('h2').text() || $('p').text() || 'This is a website',
                     "keywords": $('meta[name="keywords"]').attr('content'),
                     "images": $('img').map((i, el) => $(el).attr('src')).get(),
                     "html": $.html(),
