@@ -1,12 +1,12 @@
 const db = require('./config.js'); // Import the configuration file for the database
 const modules = require('../modules/modules'); // Import the modules for web crawling
 const COLLECTIONS = require('./collections.js'); // Import the collections from the database
-let indexedPages = [];
 const Fuse = require('fuse.js'); // Import the Fuse.js library for searching and filtering data
 let request = require('request');
 const util = require('util');
 const requestPromise = util.promisify(request);
 const ObjectId = require('mongodb').ObjectID; // Import the ObjectId method from the MongoDB library
+let indexedPages = [];
 
 module.exports = {
     addIndex: async (urlData) => { // Method to add a new page to the index
@@ -67,7 +67,7 @@ module.exports = {
             }
 
             const fuse = new Fuse(indexData, { // Create a new Fuse object
-                keys: ['title', 'description', 'keywords', 'url'], // Specify the keys to search in
+                keys: ['title', 'description'], // Specify the keys to search in
                 includeScore: true, // Include the search score in the results
                 threshold: 0.4, // Adjust the search result relevance
             });
@@ -111,7 +111,7 @@ module.exports = {
             }
 
             const fuse = new Fuse(pages, {
-                keys: ['title', 'description', 'keywords', 'url'],
+                keys: ['title', 'description'],
                 includeScore: true,
                 threshold: 0.4,
             });
@@ -124,30 +124,6 @@ module.exports = {
             }
 
             return results.map((result) => result.item);
-        } catch (err) {
-            console.error(err);
-            throw err;
-        }
-    },
-    searchQ: async (q) => {
-        try {
-            let indexData = []
-            if (indexedPages.length !== 0) {
-                indexData = indexedPages;
-            } else {
-                indexData = await db.get().collection(COLLECTIONS.INDEX).find().toArray(); // Find all the documents in the index collection
-                indexedPages = indexData;
-            }
-
-            const fuse = new Fuse(indexData, {
-                keys: ['title', 'description', 'keywords', 'url'],
-                includeScore: true,
-                threshold: 0.4,
-            });
-
-            const results = fuse.search(q).map((result) => result.item.title);
-
-            return results;
         } catch (err) {
             console.error(err);
             throw err;
