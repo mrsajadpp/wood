@@ -1,6 +1,7 @@
 const db = require('./config.js'); // Import the configuration file for the database
 const modules = require('../modules/modules'); // Import the modules for web crawling
 const COLLECTIONS = require('./collections.js'); // Import the collections from the database
+let indexedPages = [];
 const Fuse = require('fuse.js'); // Import the Fuse.js library for searching and filtering data
 let request = require('request');
 const util = require('util');
@@ -30,6 +31,8 @@ module.exports = {
 
             const insertData = await db.get().collection(COLLECTIONS.INDEX).insertOne(pageData); // Insert the page data into the index
 
+            indexedPages.push(pageData);
+
             return { message: 'Page indexed successfully.' }; // Return a success message
         } catch (err) {
             console.error(err); // Log any errors
@@ -39,7 +42,12 @@ module.exports = {
 
     getIndex: async () => { // Method to get all the indexed pages
         try {
+            if (indexedPages.length !== 0) {
+                return indexedPages;
+            }
             const index = await db.get().collection(COLLECTIONS.INDEX).find().toArray(); // Find all the documents in the index collection
+
+            indexedPages = index;
 
             return index; // Return the index array
         } catch (err) {
@@ -50,7 +58,13 @@ module.exports = {
 
     searchIndex: async (query) => { // Method to search the indexed pages
         try {
-            const indexData = await db.get().collection(COLLECTIONS.INDEX).find().toArray(); // Find all the documents in the index collection
+            let indexData = []
+            if (indexedPages.length !== 0) {
+                indexData = indexedPages;
+            } else {
+                indexData = await db.get().collection(COLLECTIONS.INDEX).find().toArray(); // Find all the documents in the index collection
+                indexedPages = indexData;
+            }
 
             const fuse = new Fuse(indexData, { // Create a new Fuse object
                 keys: ['title', 'description', 'keywords', 'url'], // Specify the keys to search in
@@ -72,7 +86,13 @@ module.exports = {
     },
     searchImage: async (query) => {
         try {
-            const indexData = await db.get().collection(COLLECTIONS.INDEX).find().toArray();
+            let indexData = []
+            if (indexedPages.length !== 0) {
+                indexData = indexedPages;
+            } else {
+                indexData = await db.get().collection(COLLECTIONS.INDEX).find().toArray(); // Find all the documents in the index collection
+                indexedPages = indexData;
+            }
 
             const pages = [];
 
@@ -111,8 +131,13 @@ module.exports = {
     },
     searchQ: async (q) => {
         try {
-            console.log(q)
-            const indexData = await db.get().collection(COLLECTIONS.INDEX).find().toArray();
+            let indexData = []
+            if (indexedPages.length !== 0) {
+                indexData = indexedPages;
+            } else {
+                indexData = await db.get().collection(COLLECTIONS.INDEX).find().toArray(); // Find all the documents in the index collection
+                indexedPages = indexData;
+            }
 
             const fuse = new Fuse(indexData, {
                 keys: ['title', 'description', 'keywords', 'url'],
