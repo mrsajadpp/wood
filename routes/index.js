@@ -23,7 +23,6 @@ router.get('/search', async (req, res, next) => {
       // if the query is a URL, redirect to it and add it to the index
       const url = new URL(query);
       res.redirect(`${url.origin}${url.pathname}`);
-      await webData.addIndex(url);
     } else {
       if (req.query.img) {
         // if the query is not a URL, search the index and deliver the results
