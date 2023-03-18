@@ -9,9 +9,13 @@ const validator = require('validator');
 const util = require('util');
 const requestPromise = util.promisify(request);
 const ObjectId = require('mongodb').ObjectID; // Import the ObjectId method from the MongoDB library
+const { google } = require('googleapis');
+const customsearch = google.customsearch('v1');
+const API_KEY = 'AIzaSyAaU1iEQS7A3qXAuBBhi6dg63YBnJ0KsZo';
+const SEARCH_ENGINE_ID = 'f45d4e3e5a9004036';
 
 module.exports = {
-    searchIndex: async (query) => { // Method to search the indexed pages
+    /*searchIndex: async (query) => { // Method to search the indexed pages
         try {
             const indexCollection = db.get().collection(COLLECTIONS.INDEX);
 
@@ -27,6 +31,50 @@ module.exports = {
             }
 
             return results; // Return the search results as an array of pages
+        } catch (err) {
+            console.error(err); // Log any errors
+            throw err; // Throw the error
+        }
+    }*/
+    searchIndex: async (query) => {
+        try {
+            const indexCollection = db.get().collection(COLLECTIONS.INDEX);
+
+            // Search for pages with the given query in title or description fields
+            const results = await indexCollection.find({
+                $text: { $search: query }
+            }, {
+                score: { $meta: "textScore" }
+            }).sort({ score: { $meta: "textScore" } }).toArray();
+
+            if (results.length === 0) {
+                throw { error: 'No search results found.' };
+            }
+
+            // Retrieve Google indexed data for each result
+            const searchParams = {
+                q: query,
+                cx: SEARCH_ENGINE_ID,
+                auth: API_KEY
+            };
+            const searchResult = await customsearch.cse.list(searchParams);
+            pages = searchResult.data.items;
+            for (const page of pages) {
+                const data = {
+                    url: page.link,
+                    url_data: new URL(page.link),
+                    title: page.title,
+                    description: page.snippet
+                };
+                results.push(data)
+            }
+            // Shuffle the search results randomly
+            for (let i = results.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [results[i], results[j]] = [results[j], results[i]];
+            }
+
+            return results; // Return the search results as an array of pages with Google indexed data added
         } catch (err) {
             console.error(err); // Log any errors
             throw err; // Throw the error
