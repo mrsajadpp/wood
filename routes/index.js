@@ -28,9 +28,9 @@ router.get('/search', async (req, res, next) => {
       if (req.query.img) {
         // if the query is not a URL, search the index and deliver the results
         webData.searchImage(query).then((results) => {
-          res.render('image', { title: query, description: `Found '${results.length}' results for '${query}'`, style: 'result', status: false, pages: results, q: query, id: 'b' });
+          res.render('image', { title: query, description: `Found '${results.length}' results for '${query}'`, style: 'result', status: false, images: results, q: query, id: 'b' });
         }).catch((err) => {
-          res.render('image', { title: query, description: `No results found for '${query}'`, style: 'result', status: false, pages: false, q: query, id: 'b' });
+          res.render('image', { title: query, description: `No results found for '${query}'`, style: 'result', status: false, images: false, q: query, id: 'b' });
         });
       } else {
         // if the query is not a URL, search the index and deliver the results

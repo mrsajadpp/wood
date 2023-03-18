@@ -19,6 +19,7 @@ function connect(done) {
         console.log("Index created successfully!");
         done();
       });
+
     });
   } catch (err) {
     console.error(err);

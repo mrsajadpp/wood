@@ -1,16 +1,14 @@
 {{>search}}
-{{#if pages}}
+{{#if images}}
 <section id="searchresultsarea">
     <div class="container-fluid">
         <div class="d-flex flex-row flex-wrap justify-content-center">
-            {{#each pages}}
-            {{#each this.images}}
+            {{#each images}}
             <div class="d-flex flex-column">
-                <a href="{{../this.url}}">
-                    <img src="{{../this.url_data.origin}}{{this}}" class="img-fluid">
+                <a href="{{this}}">
+                    <img src="{{this}}" class="img-fluid">
                 </a>
             </div>
-            {{/each}}
             {{/each}}
         </div>
     </div>

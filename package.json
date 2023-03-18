@@ -24,7 +24,8 @@
     "nodemon": "^2.0.20",
     "request": "^2.88.2",
     "serve-favicon": "^2.5.0",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "validator": "^13.9.0"
   },
   "main": "app.js",
   "repository": {
