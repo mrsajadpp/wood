@@ -1,20 +1,16 @@
 {{>search}}
 {{#if images}}
-<section id="searchresultsarea">
-    <div class="container-fluid">
-        <div class="d-flex flex-row flex-wrap justify-content-center">
-            {{#each images}}
-            <div class="d-flex flex-column">
-                <a href="{{this}}">
-                    <img src="{{this}}" class="img-fluid">
-                </a>
-            </div>
-            {{/each}}
+<div class="containerr">
+    {{#each images}}
+    <div class="card" onclick="location.href = {{this}};">
+        <div class="imgContainer">
+            <img src="{{this}}">
         </div>
     </div>
-</section>
+    {{/each}}
+</div>
 {{else}}
-<div class="container" id="searchresultsarea">
+<div class="container" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100vh;">
     <div class="notfound">
         <span class="text">No results <span class="green-text">found</span>!</span>
     </div>

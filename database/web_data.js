@@ -61,8 +61,6 @@ module.exports = {
                 }
             }
 
-            console.log(images)
-
             return images;
         } catch (err) {
             console.error(err);
