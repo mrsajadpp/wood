@@ -4,7 +4,7 @@
     {{#each images}}
     <div class="card" onclick="location.href = {{this}};">
         <div class="imgContainer">
-            <img src="{{this}}">
+            <img src="{{this}}" alt="Image" onerror="this.onerror=null;this.src='path/to/default-image.jpg';" />
         </div>
     </div>
     {{/each}}
