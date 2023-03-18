@@ -214,7 +214,6 @@ img {
 }
 
 .containerr {
-    min-height: 100vh;
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -229,6 +228,8 @@ img {
     border-radius: 0px;
     background-color: #0f0f0f;
     position: static;
+    overflow: hidden;
+    border: 0px;
 }
 
 .card .imgContainer {
