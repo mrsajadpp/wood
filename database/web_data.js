@@ -1,13 +1,8 @@
 const db = require('./config.js'); // Import the configuration file for the database
 const COLLECTIONS = require('./collections.js'); // Import the collections from the database
-const Fuse = require('fuse.js'); // Import the Fuse.js library for searching and filtering data
-let request = require('request');
-const http = require('http');
-const https = require('https');
 const axios = require("axios");
+const cheerio = require('cheerio');
 const validator = require('validator');
-const util = require('util');
-const requestPromise = util.promisify(request);
 const ObjectId = require('mongodb').ObjectID; // Import the ObjectId method from the MongoDB library
 const { google } = require('googleapis');
 const customsearch = google.customsearch('v1');
@@ -15,27 +10,6 @@ const API_KEY = 'AIzaSyAaU1iEQS7A3qXAuBBhi6dg63YBnJ0KsZo';
 const SEARCH_ENGINE_ID = 'f45d4e3e5a9004036';
 
 module.exports = {
-    /*searchIndex: async (query) => { // Method to search the indexed pages
-        try {
-            const indexCollection = db.get().collection(COLLECTIONS.INDEX);
-
-            // Search for pages with the given query in title or description fields
-            const results = await indexCollection.find({
-                $text: { $search: query }
-            }, {
-                score: { $meta: "textScore" }
-            }).sort({ score: { $meta: "textScore" } }).toArray();
-
-            if (results.length === 0) {
-                throw { error: 'No search results found.' };
-            }
-
-            return results; // Return the search results as an array of pages
-        } catch (err) {
-            console.error(err); // Log any errors
-            throw err; // Throw the error
-        }
-    }*/
     searchIndex: async (query) => {
         try {
             const indexCollection = db.get().collection(COLLECTIONS.INDEX);
@@ -47,9 +21,6 @@ module.exports = {
                 score: { $meta: "textScore" }
             }).sort({ score: { $meta: "textScore" } }).toArray();
 
-            if (results.length === 0) {
-                throw { error: 'No search results found.' };
-            }
 
             // Retrieve Google indexed data for each result
             const searchParams = {
@@ -68,6 +39,11 @@ module.exports = {
                 };
                 results.push(data)
             }
+
+            if (results.length === 0) {
+                throw { error: 'No search results found.' };
+            }
+            
             // Shuffle the search results randomly
             for (let i = results.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));

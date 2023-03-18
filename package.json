@@ -25,6 +25,7 @@
     "nodemon": "^2.0.20",
     "request": "^2.88.2",
     "serve-favicon": "^2.5.0",
+    "solr-node": "^1.2.1",
     "util": "^0.12.5",
     "validator": "^13.9.0"
   },
