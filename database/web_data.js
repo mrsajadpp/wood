@@ -59,53 +59,65 @@ module.exports = {
 
     searchImage: async (query) => {
         try {
-          const indexCollection = db.get().collection(COLLECTIONS.INDEX);
-      
-          const results = await indexCollection.find({
-            $or: [
-              { "images.value": { $regex: new RegExp(query, 'i') } },
-              { title: { $regex: new RegExp(query, 'i') } },
-              { description: { $regex: new RegExp(query, 'i') } }
-            ]
-          }).toArray();
-      
-          // Retrieve Google indexed data for the query
-          const searchParams = {
-            q: query,
-            cx: SEARCH_ENGINE_ID,
-            auth: API_KEY,
-            searchType: 'image',
-          };
-      
-          const searchResult = await customsearch.cse.list(searchParams);
-          const googleImages = searchResult.data.items.map(page => ({
-            url: page.link,
-            url_data: new URL(page.link),
-            title: page.title,
-            description: page.snippet
-          }));
-      
-          // Concatenate the Google indexed images with the images in the index collection
-          const images = results.reduce((acc, cur) => {
-            acc.push(...cur.images);
-            return acc;
-          }, []).concat(googleImages.map(image => image.url));
-      
-          // Filter and shuffle the images randomly
-          const filteredImages = images.filter(image => (
-            image.startsWith('http') && (image.endsWith('.jpg') || image.endsWith('.png') || image.endsWith('.jpeg')) &&
-            validator.isURL(image)
-          ));
-          const shuffledImages = filteredImages.sort(() => Math.random() - 0.5);
-      
-          if (shuffledImages.length === 0) {
-            throw new Error('No search results found.');
-          }
-      
-          return shuffledImages;
+            const indexCollection = db.get().collection(COLLECTIONS.INDEX);
+
+            const results = await indexCollection.find({
+                $or: [
+                    { "images.value": { $regex: new RegExp(query, 'i') } },
+                    { title: { $regex: new RegExp(query, 'i') } },
+                    { description: { $regex: new RegExp(query, 'i') } }
+                ]
+            }).toArray();
+
+            // Retrieve Google indexed data for each result
+            const searchParams = {
+                q: query,
+                cx: SEARCH_ENGINE_ID,
+                auth: API_KEY,
+                searchType: 'image',
+            };
+
+            const searchResult = await customsearch.cse.list(searchParams);
+            let pages = searchResult.data.items;
+            for (const page of pages) {
+                const data = {
+                    url: page.link,
+                    url_data: new URL(page.link),
+                    title: page.title,
+                    description: page.snippet,
+                    images: [page.image.thumbnailLink]
+                };
+                results.push(data)
+            }
+
+            if (results.length === 0) {
+                throw { error: 'No search results found.' };
+            }
+
+            const images = [];
+
+            for (const result of results) {
+                if (result.images && Array.isArray(result.images)) { // added check for images property
+                    for (const image of result.images) {
+                        if (image.startsWith('http')) {
+                            if (validator.isURL(image)) {
+                                images.push(image);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Shuffle the search results randomly
+            for (let i = images.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [images[i], images[j]] = [images[j], images[i]];
+            }
+
+            return images;
         } catch (err) {
-          console.error(err);
-          throw err;
+            console.error(err);
+            throw err;
         }
-      }      
+    }
 };
