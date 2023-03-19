@@ -8,7 +8,6 @@ const axios = require('axios');
 router.get('/', async (req, res, next) => {
   try {
     const response = await axios.get('https://specialday.spotitinc.repl.co/');
-    console.log(response.data)
     // deliver the search page
     res.render('search', { title: 'Search anything in wood', description: 'World number 1 search engine powered by Spotit inc', style: 'search', status: false, special: response.data.color.replace(/#/g, "") })
   } catch (err) {
