@@ -29,7 +29,7 @@ module.exports = {
                 auth: API_KEY
             };
             const searchResult = await customsearch.cse.list(searchParams);
-            pages = searchResult.data.items;
+            let pages = searchResult.data.items;
             for (const page of pages) {
                 const data = {
                     url: page.link,
@@ -43,7 +43,7 @@ module.exports = {
             if (results.length === 0) {
                 throw { error: 'No search results found.' };
             }
-            
+
             // Shuffle the search results randomly
             for (let i = results.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -59,36 +59,53 @@ module.exports = {
 
     searchImage: async (query) => {
         try {
-            const indexCollection = db.get().collection(COLLECTIONS.INDEX);
-
-            const results = await indexCollection.find({
-                $or: [
-                    { "images.value": { $regex: new RegExp(query, 'i') } },
-                    { title: { $regex: new RegExp(query, 'i') } },
-                    { description: { $regex: new RegExp(query, 'i') } }
-                ]
-            }).toArray();
-
-            if (results.length === 0) {
-                throw { error: 'No search results found.' };
-            }
-
-            const images = [];
-
-            for (const result of results) {
-                for (const image of result.images) {
-                    if (image.startsWith('http') && (image.endsWith('.jpg') || image.endsWith('.png') || image.endsWith('.jpeg'))) {
-                        if (validator.isURL(image)) {
-                            images.push(image);
-                        }
-                    }
-                }
-            }
-
-            return images;
+          const indexCollection = db.get().collection(COLLECTIONS.INDEX);
+      
+          const results = await indexCollection.find({
+            $or: [
+              { "images.value": { $regex: new RegExp(query, 'i') } },
+              { title: { $regex: new RegExp(query, 'i') } },
+              { description: { $regex: new RegExp(query, 'i') } }
+            ]
+          }).toArray();
+      
+          // Retrieve Google indexed data for the query
+          const searchParams = {
+            q: query,
+            cx: SEARCH_ENGINE_ID,
+            auth: API_KEY,
+            searchType: 'image',
+          };
+      
+          const searchResult = await customsearch.cse.list(searchParams);
+          const googleImages = searchResult.data.items.map(page => ({
+            url: page.link,
+            url_data: new URL(page.link),
+            title: page.title,
+            description: page.snippet
+          }));
+      
+          // Concatenate the Google indexed images with the images in the index collection
+          const images = results.reduce((acc, cur) => {
+            acc.push(...cur.images);
+            return acc;
+          }, []).concat(googleImages.map(image => image.url));
+      
+          // Filter and shuffle the images randomly
+          const filteredImages = images.filter(image => (
+            image.startsWith('http') && (image.endsWith('.jpg') || image.endsWith('.png') || image.endsWith('.jpeg')) &&
+            validator.isURL(image)
+          ));
+          const shuffledImages = filteredImages.sort(() => Math.random() - 0.5);
+      
+          if (shuffledImages.length === 0) {
+            throw new Error('No search results found.');
+          }
+      
+          return shuffledImages;
         } catch (err) {
-            console.error(err);
-            throw err;
+          console.error(err);
+          throw err;
         }
-    }
+      }      
 };
