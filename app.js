@@ -16,7 +16,7 @@ let app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views/pages'));
-app.use(favicon(path.join(__dirname, 'public', '/images/special/logo/#1db954.png')));
+app.use(favicon(path.join(__dirname, 'public', '/images/special/logo/1db954.png')));
 app.engine('hbs', handlebars.engine({ extname: 'hbs', defaultLayout: 'layout', layoutsDir: __dirname + '/views/layouts/', partialsDir: __dirname + '/views/partials/' }));
 app.use(session({ secret:"@tric@wood@#]$", resave: false, saveUninitialized: false }));
 app.set('view engine', 'hbs');

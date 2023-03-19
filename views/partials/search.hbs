@@ -2,14 +2,14 @@
     <div class="search-box">
         <div class="banner-area">
             <a href="/">
-                <img src="/images/special/logo/{{special.color}}.png" alt="Wood" class="banner">
+                <img src="/images/special/logo/{{special}}.png" alt="Wood" class="banner">
             </a>
         </div>
         <div class="search-area">
             <form action="/search" method="get">
                 <input type="search" name="q" id="q" placeholder="Search" value="{{q}}" required>
                 <input type="text" hidden name="img" id="image">
-                <button type="submit"><box-icon name='search'></box-icon></button>
+                <button type="submit" style="background-color: #{{special}} !important;"><box-icon name='search'></box-icon></button>
             </form>
         </div>
     </div>

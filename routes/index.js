@@ -8,9 +8,8 @@ const axios = require('axios');
 router.get('/', async (req, res, next) => {
   try {
     const response = await axios.get('https://specialday.spotitinc.repl.co/');
-    console.log(response.data)
     // deliver the search page
-    res.render('search', { title: 'Search anything in wood', description: 'World number 1 search engine powered by Spotit inc', style: 'search', status: false, special: response.data })
+    res.render('search', { title: 'Search anything in wood', description: 'World number 1 search engine powered by Spotit inc', style: 'search', status: false, special: response.data.color.replace(/#/g, "") })
   } catch (err) {
     // handle errors
     console.error(err)
@@ -21,6 +20,7 @@ router.get('/search', async (req, res, next) => {
   try {
     // extract the query from the request
     const query = req.query.q;
+    const response = await axios.get('https://specialday.spotitinc.repl.co/');
 
     if (query.startsWith('http://') || query.startsWith('https://')) {
       // if the query is a URL, redirect to it and add it to the index
@@ -30,16 +30,16 @@ router.get('/search', async (req, res, next) => {
       if (req.query.img) {
         // if the query is not a URL, search the index and deliver the results
         webData.searchImage(query).then((results) => {
-          res.render('image', { title: query, description: `Found '${results.length}' results for '${query}'`, style: 'result', status: false, images: results, q: query, id: 'b' });
+          res.render('image', { title: query, description: `Found '${results.length}' results for '${query}'`, style: 'result', status: false, images: results, q: query, id: 'b', special: response.data.color.replace(/#/g, "") });
         }).catch((err) => {
-          res.render('image', { title: query, description: `No results found for '${query}'`, style: 'result', status: false, images: false, q: query, id: 'b' });
+          res.render('image', { title: query, description: `No results found for '${query}'`, style: 'result', status: false, images: false, q: query, id: 'b', special: response.data.color.replace(/#/g, "") });
         });
       } else {
         // if the query is not a URL, search the index and deliver the results
         webData.searchIndex(query).then((results) => {
-          res.render('result', { title: query, description: `Found '${results.length}' results for '${query}'`, style: 'result', status: false, pages: results, q: query, id: 'a' });
+          res.render('result', { title: query, description: `Found '${results.length}' results for '${query}'`, style: 'result', status: false, pages: results, q: query, id: 'a', special: response.data.color.replace(/#/g, "") });
         }).catch((err) => {
-          res.render('result', { title: query, description: `No results found for '${query}'`, style: 'result', status: false, pages: false, q: query, id: 'a' });
+          res.render('result', { title: query, description: `No results found for '${query}'`, style: 'result', status: false, pages: false, q: query, id: 'a', special: response.data.color.replace(/#/g, "") });
         });
       }
     }
