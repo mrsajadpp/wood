@@ -9,7 +9,8 @@
             <form action="/search" method="get">
                 <input type="search" name="q" id="q" placeholder="Search" value="{{q}}" required>
                 <input type="text" hidden name="img" id="image">
-                <button type="submit" style="background-color: #{{special}} !important;"><box-icon name='search'></box-icon></button>
+                <button type="submit" style="background-color: #{{special}} !important;"><box-icon
+                        name='search'></box-icon></button>
             </form>
         </div>
     </div>
@@ -66,4 +67,30 @@
         }
     }
     window.onload = addTheme('{{id}}');
+</script>
+
+<script>
+    $(function () {
+        $("#q").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "https://suggestqueries.google.com/complete/search",
+                    dataType: "jsonp",
+                    data: {
+                        q: request.term,
+                        client: "firefox",
+                        ds: "yt"
+                    },
+                    success: function (data) {
+                        let suggestion = []
+                        data[1].forEach(sugg => {
+                            suggestion.push(sugg.slice(0, 10))
+                        })
+                        response(suggestion);
+                    }
+                });
+            },
+            minLength: 2
+        });
+    });
 </script>
