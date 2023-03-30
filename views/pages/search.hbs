@@ -26,7 +26,6 @@
                     },
                     success: function (data) {
                         let suggestion = []
-                        console.log(data[1])
                         data[1].forEach(sugg => {
                             suggestion.push(sugg.slice(0, 10))
                         })
