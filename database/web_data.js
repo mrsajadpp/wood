@@ -46,10 +46,10 @@ module.exports = {
             }
 
             // Shuffle the search results randomly
-            for (let i = results.length - 1; i > 0; i--) {
+            /* for (let i = results.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [results[i], results[j]] = [results[j], results[i]];
-            }
+            } */
 
             return results; // Return the search results as an array of pages with Google indexed data added
         } catch (err) {
@@ -110,10 +110,10 @@ module.exports = {
             }
 
             // Shuffle the search results randomly
-            for (let i = images.length - 1; i > 0; i--) {
+            /* for (let i = images.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [images[i], images[j]] = [images[j], images[i]];
-            }
+            } */
 
             return images;
         } catch (err) {
