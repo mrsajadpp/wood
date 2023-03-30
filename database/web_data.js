@@ -147,13 +147,8 @@ module.exports = {
             let suggestio = []
 
             suggestions.forEach(suggest => {
-                console.log(suggest)
                 suggestio.push(suggest.slice(0, 10));
-            })
-
-            suggestio.forEach(su => {
-                console.log(su)
-            })
+            }) 
 
             // Remove duplicates from the suggestion array
             const uniqueSuggestions = [...new Set(suggestio)];
