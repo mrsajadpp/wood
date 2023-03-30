@@ -1,4 +1,5 @@
 require('dotenv').config()
+let compression = require('compression');
 let db = require('./database/config')
 let createError = require('http-errors');
 let express = require('express');
@@ -13,6 +14,9 @@ let favicon = require("serve-favicon");
 let indexRouter = require('./routes/index');
 
 let app = express();
+
+// Use the compression middleware
+app.use(compression());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views/pages'));
