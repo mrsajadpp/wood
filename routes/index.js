@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
 }); 
 
 router.post('/suggestion', async (req, res, next) => { 
-  let result = await webData.searchSuggestions(req.body.q)
+  let result = await webData.searchSuggestions(req.body.q);
   res.json({ result });
 })
 

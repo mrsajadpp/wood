@@ -29,7 +29,16 @@ module.exports = {
                 cx: SEARCH_ENGINE_ID,
                 auth: API_KEY
             };
-            const searchResult = await customsearch.cse.list(searchParams);
+            const searchResult = await customsearch.cse.list(searchParams).catch((err) => {
+                console.error(err)
+            });
+
+            if (!searchResult) {
+                if (results.length === 0) {
+                    throw { error: 'No search results found.' };
+                }
+                return results;
+            }
             let pages = searchResult.data.items;
             for (const page of pages) {
                 const data = {
@@ -78,7 +87,30 @@ module.exports = {
                 searchType: 'image',
             };
 
-            const searchResult = await customsearch.cse.list(searchParams);
+            const searchResult = await customsearch.cse.list(searchParams).catch((err) => {
+                console.error(err)
+            });
+
+            if (!searchResult) {
+                if (results.length === 0) {
+                    throw { error: 'No search results found.' };
+                }
+
+                const images = [];
+
+                for (const result of results) {
+                    if (result.images && Array.isArray(result.images)) { // added check for images property
+                        for (const image of result.images) {
+                            if (image.startsWith('http')) {
+                                if (validator.isURL(image)) {
+                                    images.push(image);
+                                }
+                            }
+                        }
+                    }
+                }
+                return images;
+            }
             let pages = searchResult.data.items;
             for (const page of pages) {
                 const data = {
@@ -148,7 +180,7 @@ module.exports = {
 
             suggestions.forEach(suggest => {
                 suggestio.push(suggest.slice(0, 10));
-            }) 
+            })
 
             // Remove duplicates from the suggestion array
             const uniqueSuggestions = [...new Set(suggestio)];
