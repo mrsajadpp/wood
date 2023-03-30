@@ -12,7 +12,7 @@ const SEARCH_ENGINE_ID = 'f45d4e3e5a9004036';
 module.exports = {
     searchIndex: async (query) => {
         try {
-            const indexCollection = db.get().collection(COLLECTIONS.INDEX);
+            const indexCollection = await db.get().collection(COLLECTIONS.INDEX);
 
             // Search for pages with the given query in title or description fields
             const results = await indexCollection.find({
@@ -20,6 +20,7 @@ module.exports = {
             }, {
                 score: { $meta: "textScore" }
             }).sort({ score: { $meta: "textScore" } }).toArray();
+
 
 
             // Retrieve Google indexed data for each result
@@ -59,7 +60,7 @@ module.exports = {
 
     searchImage: async (query) => {
         try {
-            const indexCollection = db.get().collection(COLLECTIONS.INDEX);
+            const indexCollection = await db.get().collection(COLLECTIONS.INDEX);
 
             const results = await indexCollection.find({
                 $or: [
@@ -118,6 +119,49 @@ module.exports = {
         } catch (err) {
             console.error(err);
             throw err;
+        }
+    },
+    searchSuggestions: async (query) => {
+        try {
+            const indexCollection = await db.get().collection(COLLECTIONS.INDEX);
+
+            // Search for pages with the given query in title or description fields
+            const results = await indexCollection.find({
+                $text: { $search: query }
+            }, {
+                score: { $meta: "textScore" }
+            }).sort({ score: { $meta: "textScore" } }).toArray();
+
+            // Extract the search terms from the query
+            const searchTerms = query.split(/\s+/);
+
+            // Search for suggestions based on each search term
+            const suggestions = [];
+            for (const term of searchTerms) {
+                const suggestionResult = await indexCollection.distinct("title", {
+                    keywords: { $regex: new RegExp(term, 'i') }
+                });
+                suggestions.push(...suggestionResult);
+            }
+
+            let suggestio = []
+
+            suggestions.forEach(suggest => {
+                console.log(suggest)
+                suggestio.push(suggest.slice(0, 10));
+            })
+
+            suggestio.forEach(su => {
+                console.log(su)
+            })
+
+            // Remove duplicates from the suggestion array
+            const uniqueSuggestions = [...new Set(suggestio)];
+
+            return uniqueSuggestions; // Return the search suggestions as an array of strings
+        } catch (err) {
+            console.error(err); // Log any errors
+            throw err; // Throw the error
         }
     }
 };

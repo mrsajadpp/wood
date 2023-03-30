@@ -14,7 +14,13 @@ router.get('/', async (req, res, next) => {
     // handle errors
     console.error(err)
   }
-});
+}); 
+
+router.post('/suggestion', async (req, res, next) => {
+  console.log(req.body)
+  let result = await webData.searchSuggestions(req.body.q)
+  res.json({ result });
+})
 
 router.get('/search', async (req, res, next) => {
   try {

@@ -6,7 +6,8 @@
         <div class="search-area">
             <form action="/search" method="get">
                 <input type="search" name="q" id="q" placeholder="Search" required autofocus>
-                <button type="submit" style="background-color: #{{special}} !important;"><box-icon name='search'></box-icon></button>
+                <button type="submit" style="background-color: #{{special}} !important;"><box-icon
+                        name='search'></box-icon></button>
             </form>
         </div>
     </div>
@@ -24,7 +25,12 @@
                         ds: "yt"
                     },
                     success: function (data) {
-                        response(data[1]);
+                        let suggestion = []
+                        console.log(data[1])
+                        data[1].forEach(sugg => {
+                            suggestion.push(sugg.slice(0, 10))
+                        })
+                        response(suggestion);
                     }
                 });
             },
