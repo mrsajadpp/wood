@@ -21,35 +21,6 @@ module.exports = {
                 score: { $meta: "textScore" }
             }).sort({ score: { $meta: "textScore" } }).toArray();
 
-
-
-            // Retrieve Google indexed data for each result
-            const searchParams = {
-                q: query,
-                cx: SEARCH_ENGINE_ID,
-                auth: API_KEY
-            };
-            const searchResult = await customsearch.cse.list(searchParams).catch((err) => {
-                console.error(err)
-            });
-
-            if (!searchResult) {
-                if (results.length === 0) {
-                    throw { error: 'No search results found.' };
-                }
-                return results;
-            }
-            let pages = searchResult.data.items;
-            for (const page of pages) {
-                const data = {
-                    url: page.link,
-                    url_data: new URL(page.link),
-                    title: page.title,
-                    description: page.snippet
-                };
-                results.push(data)
-            }
-
             if (results.length === 0) {
                 throw { error: 'No search results found.' };
             }
@@ -78,50 +49,6 @@ module.exports = {
                     { description: { $regex: new RegExp(query, 'i') } }
                 ]
             }).toArray();
-
-            // Retrieve Google indexed data for each result
-            const searchParams = {
-                q: query,
-                cx: SEARCH_ENGINE_ID,
-                auth: API_KEY,
-                searchType: 'image',
-            };
-
-            const searchResult = await customsearch.cse.list(searchParams).catch((err) => {
-                console.error(err)
-            });
-
-            if (!searchResult) {
-                if (results.length === 0) {
-                    throw { error: 'No search results found.' };
-                }
-
-                const images = [];
-
-                for (const result of results) {
-                    if (result.images && Array.isArray(result.images)) { // added check for images property
-                        for (const image of result.images) {
-                            if (image.startsWith('http')) {
-                                if (validator.isURL(image)) {
-                                    images.push(image);
-                                }
-                            }
-                        }
-                    }
-                }
-                return images;
-            }
-            let pages = searchResult.data.items;
-            for (const page of pages) {
-                const data = {
-                    url: page.link,
-                    url_data: new URL(page.link),
-                    title: page.title,
-                    description: page.snippet,
-                    images: [page.image.thumbnailLink]
-                };
-                results.push(data)
-            }
 
             if (results.length === 0) {
                 throw { error: 'No search results found.' };
