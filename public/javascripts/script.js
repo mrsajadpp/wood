@@ -7,4 +7,7 @@ function hideLoader() {
     }, 1000);
 }
 
-window.onload = hideLoader
+//window.onload = hideLoader
+setTimeout(() => {
+    hideLoader();
+}, 1000);
