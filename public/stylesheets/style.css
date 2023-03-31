@@ -42,6 +42,10 @@ button {
   outline: none;
 }
 
+input {
+  outline: none;
+}
+
 .main {
   width: 100vw;
   height: 100%;
