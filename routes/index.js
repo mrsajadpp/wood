@@ -59,7 +59,6 @@ router.get('/search', async (req, res, next) => {
 });
  
 router.post('/sendchat', async (req, res, next) => {
-  console.log(req.body.content);
   if (req.body.content) {
     const completion = await openai.createCompletion({
       model: "text-davinci-003",

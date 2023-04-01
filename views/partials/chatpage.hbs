@@ -35,12 +35,18 @@
         toDiv.innerHTML = `<div class="text-content">${messageContent}</div><div class="profile"><box-icon name='user' size="md" color="#1db954"></box-icon></div>`;
         mainChat.appendChild(toDiv);
         mainChat.scrollTop = mainChat.scrollHeight;
+        const typingDiv = document.createElement('div');
+        typingDiv.classList.add('typing');
+        typingDiv.innerHTML = `<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>`;
+        mainChat.appendChild(typingDiv);
+        mainChat.scrollTop = mainChat.scrollHeight;
         $.ajax({
             url: "/sendchat",
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({ content: messageContent }),
             success: function (response) {
+                mainChat.removeChild(typingDiv);
                 let fromDiv = document.createElement('div');
                 fromDiv.classList.add('chat-from');
                 console.log(response)
@@ -50,6 +56,7 @@
                 inputField.readOnly = false;
             },
             error: function (xhr, status, error) {
+                mainChat.removeChild(typingDiv);
                 let fromDiv = document.createElement('div');
                 fromDiv.classList.add('chat-from');
                 fromDiv.innerHTML = `<div class="profile"><box-icon name='bot' size="md" color="#1db954"></box-icon></div><div class="text-content">${error}</div>`
