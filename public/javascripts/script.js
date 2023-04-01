@@ -11,3 +11,11 @@ function hideLoader() {
 setTimeout(() => {
     hideLoader();
 }, 1000);
+
+let aiButton = document.getElementById('aibutton');
+let aiChat = document.getElementById('aichat');
+
+let chat = () => {
+    aiButton.classList.toggle('hide');
+    aiChat.classList.toggle('hide');
+};

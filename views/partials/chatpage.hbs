@@ -1,3 +1,40 @@
-<div class="chati-co">
-    
+<div class="chati-co hide" id="aichat">
+    <div class="chatHead">
+        <div class="right">
+            <button onclick="chat()">
+                <box-icon name='x' color="#0f0f0f" size="sm" ></box-icon>
+            </button>
+        </div>
+    </div>
+    <div class="chat-area">
+        <div class="chat-from">
+            <div class="profile">
+                <box-icon name='bot' size="md" color="#1db954"></box-icon>
+            </div>
+            <div class="text-content">
+                Hi ther!, How can i help you?.
+            </div>
+        </div>
+        <div class="chat-from chat-to">
+            <div class="text-content">
+                Hi ther!, How can i help you?.
+            </div>
+            <div class="profile">
+                <box-icon name='user' size="md" color="#444444"></box-icon>
+            </div>
+        </div>
+    </div>
+    <form id="chatForm" onsubmit="sendChat();" class="message-area">
+        <div class="chat-logo">
+            <box-icon name='message-square-dots' color="#0f0f0f"></box-icon>
+        </div>
+        <div class="input">
+            <input type="text" placeholder="Message" id="msg">
+        </div>
+        <div class="send-button">
+            <button id="send">
+                <box-icon type='solid' name='send' color="#0f0f0f"></box-icon>
+            </button>
+        </div>
+    </form>
 </div>
