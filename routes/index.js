@@ -4,6 +4,11 @@ const webData = require('../database/web_data');
 const router = express.Router();
 const path = require('path');
 const axios = require('axios');
+const { Configuration, OpenAIApi } = require("openai");
+const configuration = new Configuration({
+  apiKey: process.env.API
+});
+const openai = new OpenAIApi(configuration);
 
 router.get('/', async (req, res, next) => {
   try {
@@ -14,9 +19,9 @@ router.get('/', async (req, res, next) => {
     // handle errors
     console.error(err)
   }
-}); 
+});
 
-router.post('/suggestion', async (req, res, next) => { 
+router.post('/suggestion', async (req, res, next) => {
   let result = await webData.searchSuggestions(req.body.q);
   res.json({ result });
 })
@@ -52,6 +57,27 @@ router.get('/search', async (req, res, next) => {
     console.error(err);
   }
 });
+ 
+router.post('/sendchat', async (req, res, next) => {
+  console.log(req.body.content);
+  if (req.body.content) {
+    const completion = await openai.createCompletion({
+      model: "text-davinci-003",
+      prompt: req.body.content.toLowerCase(),
+      n: 1,
+      max_tokens: 2049,
+      stop: null,
+      temperature: 0.7
+    });
+    if (completion.status !== 200 || !completion.data.choices[0].text) {
+      res.json({ status: 500, content: "i'm sorry, I don't understand please add more context to improve my answers!." });
+    } else {
+      res.json({ status: 200, content: completion.data.choices[0].text.toLowerCase() });
+    }
+  } else {
+    res.json({ status: 404, content: 'Please enter something before sending.' })
+  }
+})
 
 
 router.get('/robots.txt', (req, res, next) => {

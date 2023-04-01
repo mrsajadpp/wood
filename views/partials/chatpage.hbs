@@ -2,39 +2,61 @@
     <div class="chatHead">
         <div class="right">
             <button onclick="chat()">
-                <box-icon name='x' color="#0f0f0f" size="sm" ></box-icon>
+                <box-icon name='x' color="#0f0f0f" size="sm"></box-icon>
             </button>
         </div>
     </div>
-    <div class="chat-area">
-        <div class="chat-from">
-            <div class="profile">
-                <box-icon name='bot' size="md" color="#1db954"></box-icon>
-            </div>
-            <div class="text-content">
-                Hi ther!, How can i help you?.
-            </div>
-        </div>
-        <div class="chat-from chat-to">
-            <div class="text-content">
-                Hi ther!, How can i help you?.
-            </div>
-            <div class="profile">
-                <box-icon name='user' size="md" color="#444444"></box-icon>
-            </div>
-        </div>
-    </div>
-    <form id="chatForm" onsubmit="sendChat();" class="message-area">
+    <div class="chat-area" id="chatbox"></div>
+    <form id="chatForm" onsubmit="sendChat(event);" class="message-area">
         <div class="chat-logo">
             <box-icon name='message-square-dots' color="#0f0f0f"></box-icon>
         </div>
         <div class="input">
-            <input type="text" placeholder="Message" id="msg">
+            <input type="text" placeholder="Message" name="content" id="msg" autocomplete="off" required>
         </div>
         <div class="send-button">
-            <button id="send">
+            <button id="send" type="submit">
                 <box-icon type='solid' name='send' color="#0f0f0f"></box-icon>
             </button>
         </div>
     </form>
 </div>
+<script>
+    let mainChat = document.getElementById('chatbox')
+    const sendChat = (event) => {
+        event.preventDefault();
+        const inputField = document.getElementById('msg');
+        const messageContent = inputField.value;
+        inputField.value = '';
+        inputField.readOnly = true;
+        let toDiv = document.createElement('div');
+        toDiv.classList.add('chat-from');
+        toDiv.classList.add('chat-to');
+        toDiv.innerHTML = `<div class="text-content">${messageContent}</div><div class="profile"><box-icon name='user' size="md" color="#1db954"></box-icon></div>`;
+        mainChat.appendChild(toDiv);
+        mainChat.scrollTop = mainChat.scrollHeight;
+        $.ajax({
+            url: "/sendchat",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ content: messageContent }),
+            success: function (response) {
+                let fromDiv = document.createElement('div');
+                fromDiv.classList.add('chat-from');
+                console.log(response)
+                fromDiv.innerHTML = `<div class="profile"><box-icon name='bot' size="md" color="#1db954"></box-icon></div><div class="text-content">${response.content}</div>`
+                mainChat.appendChild(fromDiv);
+                mainChat.scrollTop = mainChat.scrollHeight;
+                inputField.readOnly = false;
+            },
+            error: function (xhr, status, error) {
+                let fromDiv = document.createElement('div');
+                fromDiv.classList.add('chat-from');
+                fromDiv.innerHTML = `<div class="profile"><box-icon name='bot' size="md" color="#1db954"></box-icon></div><div class="text-content">${error}</div>`
+                mainChat.appendChild(fromDiv);
+                mainChat.scrollTop = mainChat.scrollHeight;
+                inputField.readOnly = false;
+            }
+        });
+    }
+</script>

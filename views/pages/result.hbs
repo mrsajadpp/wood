@@ -13,9 +13,11 @@
 {{>chatpage}}
 {{>chaticon}}
 {{else}}
-<div class="container" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100vh;">
+<div class="container" id="searchresultsarea" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100vh;">
     <div class="notfound">
         <span class="text">No results <span class="green-text">found</span>!</span>
     </div>
 </div>
+{{>chatpage}}
+{{>chaticon}}
 {{/if}}

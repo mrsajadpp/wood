@@ -14,8 +14,10 @@ setTimeout(() => {
 
 let aiButton = document.getElementById('aibutton');
 let aiChat = document.getElementById('aichat');
+let resultBody = document.getElementById('searchresultsarea');
 
 let chat = () => {
     aiButton.classList.toggle('hide');
     aiChat.classList.toggle('hide');
+    resultBody.classList.toggle('hide');
 };
