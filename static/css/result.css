@@ -67,7 +67,7 @@
     outline: none;
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
-    background-color: #1db954;
+    background-color: #ff2b4b;
 }
 
 .tools {
@@ -118,7 +118,7 @@
 }
 
 .tools .tool #a:hover {
-    border-bottom: #1db954 1px solid;
+    border-bottom: #ff2b4b 1px solid;
 }
 
 .tools .tool #b:hover {
@@ -134,7 +134,7 @@
 }
 
 .tools .tool #e:hover {
-    border-bottom: #1db954 1px solid;
+    border-bottom: #ff2b4b 1px solid;
 }
 
 .searchresult {
@@ -150,7 +150,7 @@
     font-size: 19px;
     line-height: 18px;
     font-weight: normal;
-    color: #1db954;
+    color: #ff2b4b;
     margin-top: 25px;
 }
 
@@ -191,7 +191,7 @@
 }
 
 .green-text {
-    color: #1db954;
+    color: #ff2b4b;
 }
 
 .flex-column {
@@ -341,7 +341,7 @@ img {
     height: 55px;
     position: fixed;
     top: 0px;
-    background-color: #1db954;
+    background-color: #ff2b4b;
     display: flex;
     justify-content: flex-end;
 }
@@ -387,7 +387,7 @@ img {
     align-items: center;
     justify-content: center;
     border-radius: 25px;
-    background-color: #1db954;
+    background-color: #ff2b4b;
 }
 
 .message-area .input {
@@ -414,7 +414,7 @@ img {
 .message-area .send-button {
     width: 80px;
     height: 100%;
-    background-color: #1db954;
+    background-color: #ff2b4b;
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
 }
@@ -438,7 +438,7 @@ img {
     display: flex;
     justify-content: flex-start;
     background-color: #444444;
-    color: #1db954;
+    color: #ff2b4b;
     box-shadow: 0px 0px 1px;
 }
 
@@ -468,7 +468,7 @@ img {
     display: flex;
     justify-content: flex-end !important;
     background-color: #444444;
-    color: #1db954;
+    color: #ff2b4b;
 }
 
 .chat-to .text-content {

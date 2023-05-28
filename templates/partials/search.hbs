@@ -17,7 +17,7 @@
     <div class="tools">
         <div class="tool">
             <a href="/search?q={{q}}" id="a">
-                <button id="all"><box-icon name='search' color="#1db954"></box-icon>&nbsp;All</button>
+                <button id="all"><box-icon name='search' color="#ff2b4b"></box-icon>&nbsp;All</button>
             </a>
         </div>
         <div class="tool">
@@ -37,7 +37,7 @@
         </div>
         <div class="tool">
             <a href="https://rzp.io/l/27KyQ1AB" id="e">
-                <button id="donate"><box-icon name='donate-heart' color="#1db954"></box-icon>&nbsp;Donate</button>
+                <button id="donate"><box-icon name='donate-heart' color="#ff2b4b"></box-icon>&nbsp;Donate</button>
             </a>
         </div>
     </div>
@@ -46,7 +46,7 @@
     function addTheme(id) {
         let section = document.getElementById(id);
         if (id == 'a') {
-            section.style.borderBottom = '#1db954 1px solid';
+            section.style.borderBottom = '#ff2b4b 1px solid';
         }
 
         if (id == 'b') {
@@ -63,7 +63,7 @@
         }
 
         if (id == 'e') {
-            section.style.borderBottom = '#1db954 1px solid';
+            section.style.borderBottom = '#ff2b4b 1px solid';
         }
     }
     window.onload = addTheme('{{id}}');

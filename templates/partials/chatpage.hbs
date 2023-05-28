@@ -32,7 +32,7 @@
         let toDiv = document.createElement('div');
         toDiv.classList.add('chat-from');
         toDiv.classList.add('chat-to');
-        toDiv.innerHTML = `<div class="text-content">${messageContent}</div><div class="profile"><box-icon name='user' size="md" color="#1db954"></box-icon></div>`;
+        toDiv.innerHTML = `<div class="text-content">${messageContent}</div><div class="profile"><box-icon name='user' size="md" color="#ff2b4b"></box-icon></div>`;
         mainChat.appendChild(toDiv);
         mainChat.scrollTop = mainChat.scrollHeight;
         const typingDiv = document.createElement('div');
@@ -50,7 +50,7 @@
                 let fromDiv = document.createElement('div');
                 fromDiv.classList.add('chat-from');
                 console.log(response)
-                fromDiv.innerHTML = `<div class="profile"><box-icon name='bot' size="md" color="#1db954"></box-icon></div><div class="text-content">${response.content}</div>`
+                fromDiv.innerHTML = `<div class="profile"><box-icon name='bot' size="md" color="#ff2b4b"></box-icon></div><div class="text-content">${response.content}</div>`
                 mainChat.appendChild(fromDiv);
                 mainChat.scrollTop = mainChat.scrollHeight;
                 inputField.readOnly = false;
@@ -59,7 +59,7 @@
                 mainChat.removeChild(typingDiv);
                 let fromDiv = document.createElement('div');
                 fromDiv.classList.add('chat-from');
-                fromDiv.innerHTML = `<div class="profile"><box-icon name='bot' size="md" color="#1db954"></box-icon></div><div class="text-content">${error}</div>`
+                fromDiv.innerHTML = `<div class="profile"><box-icon name='bot' size="md" color="#ff2b4b"></box-icon></div><div class="text-content">${error}</div>`
                 mainChat.appendChild(fromDiv);
                 mainChat.scrollTop = mainChat.scrollHeight;
                 inputField.readOnly = false;
